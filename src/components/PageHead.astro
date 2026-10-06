@@ -1,0 +1,13 @@
+---
+interface Props {
+  title: string;
+  lede?: string;
+}
+const { title, lede } = Astro.props;
+---
+
+<section class="page-head container">
+  <h1 class="measure">{title}</h1>
+  {lede && <p class="lede">{lede}</p>}
+  <slot />
+</section>

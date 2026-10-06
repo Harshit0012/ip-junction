@@ -1,0 +1,77 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { SITE, url } from '../../data/site';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('insights', ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const fmt = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.date.toISOString(),
+  author: { '@type': 'Organization', name: post.data.author },
+  publisher: { '@type': 'Organization', name: SITE.legalName },
+  mainEntityOfPage: new URL(Astro.url.pathname, Astro.site).href,
+};
+---
+
+<Base title={post.data.title} description={post.data.description} ogType="article" jsonLd={jsonLd}>
+  <article class="container">
+    <header class="head">
+      <a class="back" href={url('/insights/')}>Insights</a>
+      <h1>{post.data.title}</h1>
+      <p class="lede">{post.data.description}</p>
+      <p class="meta">
+        <span>{post.data.author}</span>
+        <time datetime={post.data.date.toISOString()}>{fmt.format(post.data.date)}</time>
+      </p>
+    </header>
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+
+  <CtaBand title="Facing a decision like this one?" />
+</Base>
+
+<style>
+  .head {
+    display: grid;
+    gap: var(--s3);
+    padding-block: clamp(3rem, 2rem + 4vw, 5rem) var(--s5);
+    max-width: 68ch;
+  }
+  .head h1 {
+    font-size: var(--step-4);
+  }
+  .back {
+    justify-self: start;
+    min-height: 24px;
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .back::before {
+    content: '\2190\00a0';
+  }
+  .back:hover {
+    color: var(--text);
+  }
+  .meta {
+    display: flex;
+    gap: var(--s2);
+    padding-top: var(--s3);
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+</style>

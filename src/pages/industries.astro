@@ -1,0 +1,83 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { byIndustry, type Industry } from '../data/engagements';
+
+const industries: { name: Industry; body: string }[] = [
+  { name: 'Telecom operators', body: 'Wireless and wireline carriers planning network investment, rollout and transformation.' },
+  { name: 'Cable operators', body: 'MSOs moving voice, video and data onto IP platforms and integrating acquired markets.' },
+  { name: 'Technology vendors', body: 'Equipment and technology companies that need independent research and solution design.' },
+  { name: 'Cloud & enterprise networks', body: 'Data center and enterprise operators auditing and modernizing their networks.' },
+  { name: 'Private equity', body: 'Investors evaluating spectrum, network assets and the operators that run them.' },
+];
+---
+
+<Base title="Industries" description="IPJunction works with telecom operators, cable operators, technology vendors, cloud and enterprise networks, and private equity firms.">
+  <PageHead
+    title="Who we work with."
+    lede="Operators, the vendors who supply them, and the investors who fund them. We understand the network from each side of the table."
+  />
+
+  <section class="container grid" aria-label="Industries">
+    {
+      industries.map((ind, i) => (
+        <article class={`industry reveal ${i === 0 ? 'wide' : ''}`}>
+          <h2>{ind.name}</h2>
+          <p class="muted">{ind.body}</p>
+          <ul class="clients" aria-label={`${ind.name} clients`}>
+            {byIndustry(ind.name).map((e) => (
+              <li>{e.client}</li>
+            ))}
+          </ul>
+        </article>
+      ))
+    }
+  </section>
+
+  <CtaBand />
+</Base>
+
+<style>
+  .grid {
+    display: grid;
+    gap: var(--s2);
+  }
+  .industry {
+    display: grid;
+    gap: var(--s2);
+    align-content: start;
+    padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+  .industry h2 {
+    font-size: var(--step-2);
+  }
+  .wide {
+    background: var(--surface-2);
+  }
+  .clients {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s1) var(--s3);
+    margin-top: var(--s2);
+    padding-top: var(--s2);
+    border-top: 1px solid var(--border);
+    font-weight: 520;
+  }
+  @media (min-width: 900px) {
+    .grid {
+      grid-template-columns: repeat(6, 1fr);
+    }
+    .industry {
+      grid-column: span 2;
+    }
+    .industry:nth-child(1),
+    .industry:nth-child(2) {
+      grid-column: span 3;
+    }
+  }
+</style>

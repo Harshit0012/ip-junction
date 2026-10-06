@@ -1,0 +1,224 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import { CITY_LINE, SITE, url } from '../../data/site';
+
+const thanksUrl = new URL(url('/contact/thanks/'), Astro.site).href;
+const hasForm = Boolean(SITE.web3formsKey);
+const topics = ['Network strategy', 'Cloud & infrastructure', 'Investment advisory', 'Research or white paper', 'Other'];
+---
+
+<Base title="Contact" description="Book a 30-minute call with IPJunction or send us a note. Holmdel, New Jersey.">
+  <PageHead
+    title="Let's talk about the decision in front of you."
+    lede="A 30-minute call is enough to tell whether we can help."
+  />
+
+  <section class="container layout">
+    <div class="stack-lg">
+      <section id="book" class="book" aria-labelledby="book-title">
+        <h2 id="book-title">Book a call</h2>
+        {
+          SITE.calLink ? (
+            <>
+              <p class="muted">Pick a time that suits you. The scheduler loads from Cal.com when you open it.</p>
+              <a class="btn" href={`https://cal.com/${SITE.calLink}`} data-cal-open={SITE.calLink}>
+                Open the scheduler
+              </a>
+              <div id="cal-inline" class="cal-frame" tabindex="-1" aria-label="Booking calendar" hidden />
+            </>
+          ) : (
+            <>
+              <p class="muted">Online scheduling is being set up. Email us and we will reply with times.</p>
+              <a class="btn" href={`mailto:${SITE.email}?subject=Call%20request`}>Email to book</a>
+            </>
+          )
+        }
+      </section>
+
+      <section aria-labelledby="form-title" class="stack">
+        <h2 id="form-title">Or send a note</h2>
+        {
+          !hasForm && (
+            <p class="notice" role="note">
+              This form is not connected yet. Please email <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
+            </p>
+          )
+        }
+        <form action="https://api.web3forms.com/submit" method="POST" class="form">
+          <fieldset disabled={!hasForm}>
+            <legend class="visually-hidden">Contact details</legend>
+            <input type="hidden" name="access_key" value={SITE.web3formsKey} />
+            <input type="hidden" name="subject" value="New enquiry from the IPJunction website" />
+            <input type="hidden" name="from_name" value="IPJunction website" />
+            <input type="hidden" name="redirect" value={thanksUrl} />
+            <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+            <div class="field">
+              <label for="name">Name</label>
+              <input id="name" name="name" autocomplete="name" required maxlength="120"  />
+              <p id="name-error" class="error">Please enter your name.</p>
+            </div>
+            <div class="field">
+              <label for="email">Work email</label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                required
+                maxlength="200"
+              />
+              <p id="email-error" class="error">Please enter a valid email address.</p>
+            </div>
+            <div class="field">
+              <label for="company">Company <span class="hint">(optional)</span></label>
+              <input id="company" name="company" autocomplete="organization" maxlength="160" />
+            </div>
+            <div class="field">
+              <label for="topic">Topic</label>
+              <select id="topic" name="topic" required>
+                <option value="">Choose a topic</option>
+                {topics.map((t) => <option>{t}</option>)}
+              </select>
+              <p id="topic-error" class="error">Please choose a topic.</p>
+            </div>
+            <div class="field">
+              <label for="message">Message</label>
+              <textarea
+                id="message"
+                name="message"
+                required
+                minlength="10"
+                maxlength="4000"
+                aria-describedby="message-hint"></textarea>
+              <p id="message-hint" class="hint">A few lines on the decision or project is plenty.</p>
+              <p id="message-error" class="error">Please add a short message (10 characters or more).</p>
+            </div>
+            <button class="btn" type="submit">Send message</button>
+          </fieldset>
+        </form>
+      </section>
+    </div>
+
+    <aside class="details" aria-labelledby="details-title">
+      <h2 id="details-title">Direct</h2>
+      <dl>
+        <div>
+          <dt>Email</dt>
+          <dd><a href={`mailto:${SITE.email}`}>{SITE.email}</a></dd>
+        </div>
+        <div>
+          <dt>Phone</dt>
+          <dd><a href={`tel:${SITE.phone.replace(/\s/g, '')}`}>{SITE.phoneDisplay}</a></dd>
+        </div>
+        <div>
+          <dt>Office</dt>
+          <dd>
+            <address>
+              {SITE.address.street}<br />
+              {CITY_LINE}, USA
+            </address>
+          </dd>
+        </div>
+      </dl>
+    </aside>
+  </section>
+</Base>
+
+<script>
+  import { openInlineCal } from '../../scripts/cal-loader.js';
+
+  const trigger = document.querySelector<HTMLAnchorElement>('[data-cal-open]');
+  const frame = document.getElementById('cal-inline');
+  if (trigger && frame) {
+    trigger.addEventListener('click', (event) => {
+      event.preventDefault();
+      frame.hidden = false;
+      trigger.hidden = true;
+      openInlineCal(trigger.dataset.calOpen, '#cal-inline');
+      frame.focus();
+    });
+  }
+</script>
+
+<style>
+  .layout {
+    display: grid;
+    gap: var(--s6);
+  }
+  @media (min-width: 900px) {
+    .layout {
+      grid-template-columns: 7fr 4fr;
+    }
+    .details {
+      position: sticky;
+      top: 6rem;
+      align-self: start;
+    }
+  }
+  .book {
+    display: grid;
+    gap: var(--s2);
+    justify-items: start;
+    padding: var(--s4);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+  .cal-frame {
+    width: 100%;
+    min-height: 640px;
+    overflow: auto;
+  }
+  .cal-frame :global(iframe) {
+    width: 100%;
+    border: 0;
+  }
+  .form fieldset {
+    display: grid;
+    gap: var(--s3);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    max-width: 36rem;
+  }
+  .form fieldset:disabled {
+    opacity: 0.6;
+  }
+  .form .btn {
+    justify-self: start;
+  }
+  .hp {
+    display: none;
+  }
+  .notice {
+    padding: var(--s2);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+  }
+  .details h2 {
+    font-size: var(--step-2);
+  }
+  .details dl {
+    display: grid;
+    gap: var(--s3);
+    margin: var(--s3) 0 0;
+  }
+  .details dt {
+    font-size: var(--step--1);
+    color: var(--muted);
+  }
+  .details dd {
+    margin: 0.25rem 0 0;
+  }
+  .details address {
+    font-style: normal;
+  }
+  .details a {
+    display: inline-flex;
+    min-height: 24px;
+    align-items: center;
+    overflow-wrap: anywhere;
+  }
+</style>

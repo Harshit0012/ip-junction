@@ -1,0 +1,15 @@
+# Production security headers for Cloudflare Pages or Netlify.
+# GitHub Pages ignores this file; there the per-page <meta> CSP and referrer policy apply instead.
+# Review HSTS before adding "preload": it commits the whole domain to HTTPS for a long time.
+
+/*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+  Cross-Origin-Opener-Policy: same-origin
+  Content-Security-Policy: frame-ancestors 'none'; base-uri 'self'; object-src 'none'
+
+/admin/*
+  X-Robots-Tag: noindex

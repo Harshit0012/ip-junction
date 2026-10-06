@@ -1,0 +1,52 @@
+---
+import { PRIMARY_CTA, url } from '../data/site';
+interface Props {
+  title?: string;
+  body?: string;
+}
+const {
+  title = 'Have a network, cloud or investment decision in front of you?',
+  body = 'A 30-minute call is enough to tell whether we can help.',
+} = Astro.props;
+---
+
+<section class="cta-band container reveal" aria-labelledby="cta-title">
+  <div class="panel">
+    <h2 id="cta-title">{title}</h2>
+    <p>{body}</p>
+    <a class="btn invert" href={url(PRIMARY_CTA.href)}>{PRIMARY_CTA.label}</a>
+  </div>
+</section>
+
+<style>
+  .cta-band {
+    margin-top: var(--section);
+  }
+  :global(.section) + .cta-band {
+    margin-top: 0;
+  }
+  .panel {
+    display: grid;
+    gap: var(--s3);
+    justify-items: start;
+    padding: clamp(2rem, 1rem + 5vw, 5rem);
+    background: var(--invert-bg);
+    color: var(--invert-text);
+    border-radius: var(--radius);
+  }
+  h2 {
+    max-width: 22ch;
+  }
+  p {
+    color: var(--invert-muted);
+    font-size: var(--step-1);
+  }
+  .invert {
+    background: var(--invert-text);
+    color: var(--invert-bg);
+    border-color: var(--invert-text);
+  }
+  .panel :focus-visible {
+    outline-color: var(--invert-text);
+  }
+</style>

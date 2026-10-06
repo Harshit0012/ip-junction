@@ -1,0 +1,87 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import CtaBand from '../components/CtaBand.astro';
+
+const layers = [
+  {
+    name: 'Transport & IP',
+    body: 'Where traffic is carried and where most network cost sits.',
+    tags: ['IP/MPLS', 'Broadband', 'Small-cell backhaul', 'C-RAN fronthaul'],
+  },
+  {
+    name: 'Virtualization & cloud',
+    body: 'Moving network functions from dedicated hardware onto shared platforms.',
+    tags: ['SDN/NFV', 'OpenStack', 'Cloud-native platforms', 'Public & private cloud'],
+  },
+  {
+    name: 'Radio & access',
+    body: 'Spectrum, rollout strategy and the shift to open, cloud-hosted RAN.',
+    tags: ['LTE strategy', 'Open RAN', 'O-Cloud', 'SMO'],
+  },
+  {
+    name: 'Voice & services',
+    body: 'Moving legacy voice and services onto IP platforms without losing reliability.',
+    tags: ['IMS', 'PC2.0', '3GPP', 'IETF'],
+  },
+  {
+    name: 'Operations',
+    body: 'The systems that decide whether a new platform saves money or adds work.',
+    tags: ['OSS/BSS', 'Orchestration', 'Network automation', 'AI/ML for networks'],
+  },
+  {
+    name: 'Edge',
+    body: 'Putting compute where 5G, AI workloads and hyperscalers meet the network.',
+    tags: ['Edge computing', '5G', 'Hyperscaler integration'],
+  },
+];
+---
+
+<Base title="Expertise" description="The network and cloud technology IPJunction works in, from IP/MPLS and SDN/NFV to Open RAN, IMS, OSS/BSS and edge.">
+  <PageHead
+    title="The technology we work in, layer by layer."
+    lede="Our advice holds up because we have designed, deployed and audited these systems ourselves."
+  />
+
+  <section class="container layers" aria-label="Technology layers">
+    {
+      layers.map((l) => (
+        <article class="layer reveal">
+          <h2>{l.name}</h2>
+          <p class="muted">{l.body}</p>
+          <ul class="tags">
+            {l.tags.map((t) => (
+              <li>{t}</li>
+            ))}
+          </ul>
+        </article>
+      ))
+    }
+  </section>
+
+  <CtaBand title="Working through a platform decision?" />
+</Base>
+
+<style>
+  .layers {
+    display: grid;
+    gap: 0;
+    border-top: 1px solid var(--border);
+  }
+  .layer {
+    display: grid;
+    gap: var(--s2);
+    align-content: start;
+    padding-block: var(--s4);
+    border-bottom: 1px solid var(--border);
+  }
+  .layer h2 {
+    font-size: var(--step-2);
+  }
+  @media (min-width: 900px) {
+    .layers {
+      grid-template-columns: 1fr 1fr;
+      column-gap: var(--s6);
+    }
+  }
+</style>

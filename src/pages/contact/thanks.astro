@@ -1,0 +1,17 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import { url } from '../../data/site';
+---
+
+<Base title="Message sent" description="Thanks for contacting IPJunction." noindex>
+  <PageHead title="Thanks. Your message is on its way." lede="We read every note and will be in touch soon.">
+    <p class="back"><a class="link-arrow" href={url('/insights/')}>Read our latest insights</a></p>
+  </PageHead>
+</Base>
+
+<style>
+  .back {
+    margin-top: var(--s4);
+  }
+</style>

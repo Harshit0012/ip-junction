@@ -1,0 +1,51 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import CtaBand from '../components/CtaBand.astro';
+
+const groups = [
+  ['IEEE', 'Future Networks Initiative, ANTS and the workshops and symposia our founder organizes.'],
+  ['Linux Foundation Edge', 'Akraino edge stack, where our founder was named Top Committer of the Year 2021.'],
+  ['O-RAN', 'O-Cloud and SMO architecture for open, cloud-hosted radio access networks.'],
+  ['3GPP and IETF', 'The requirements behind IMS voice transformation, mobile core and IP transport work.'],
+  ['OpenStack', 'Airship and the deployment tooling behind operator network clouds.'],
+  ['SDN and OpenFlow', 'Software-defined networking research, including seven white papers for NEC America.'],
+];
+---
+
+<Base title="Ecosystem" description="The standards bodies and open-source communities IPJunction's work draws on: IEEE, LF Edge, O-RAN, 3GPP, IETF, OpenStack and SDN.">
+  <PageHead
+    title="Standards and communities our work draws on."
+    lede="We work in the open specifications that operators buy against, and in the communities that write them."
+  />
+  <section class="container">
+    <ul class="rule-list">
+      {
+        groups.map(([name, body]) => (
+          <li class="reveal">
+            <h2 class="h">{name}</h2>
+            <p>{body}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+  <CtaBand />
+</Base>
+
+<style>
+  .h {
+    font-size: var(--step-2);
+  }
+  .rule-list li {
+    display: grid;
+    gap: var(--s1);
+  }
+  @media (min-width: 900px) {
+    .rule-list li {
+      grid-template-columns: 5fr 7fr;
+      gap: var(--s6);
+      align-items: baseline;
+    }
+  }
+</style>

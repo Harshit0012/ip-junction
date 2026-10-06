@@ -1,0 +1,343 @@
+---
+import { Picture } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import CtaBand from '../components/CtaBand.astro';
+import founder from '../assets/founder.jpg';
+import { PRIMARY_CTA, SITE, url } from '../data/site';
+import { ENGAGEMENTS } from '../data/engagements';
+
+const capabilities = [
+  ['Technology Strategy', 'Align technology investments with business goals.'],
+  ['Network & Cloud Transformation', 'Modernize networks and adopt cloud for agility and scale.'],
+  ['Systems Integration', 'Integrate complex systems into a single working operation.'],
+  ['Operational Excellence', 'Optimize processes to improve efficiency and performance.'],
+  ['Business Process Optimization', 'Drive effectiveness through process improvement.'],
+  ['Emerging Technologies', 'Put new technology to work for competitive advantage.'],
+] as const;
+
+const stats = [
+  ['2009', 'Founded'],
+  ['10+', 'Tier-1 clients served'],
+  ['20+', 'Strategic engagements'],
+  ['5', 'Practice areas'],
+] as const;
+
+const pick = (client: string) => ENGAGEMENTS.find((e) => e.client === client)!;
+const featured = [pick('Charter Communications'), pick('Verizon Communications'), pick('SPO Partners')];
+
+const posts = (await getCollection('insights', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+const fmt = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: SITE.legalName,
+  url: new URL(url('/'), Astro.site).href,
+  logo: new URL(url('/favicon.svg'), Astro.site).href,
+  slogan: SITE.tagline,
+  foundingDate: String(SITE.foundingYear),
+  email: SITE.email,
+  telephone: SITE.phone,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: SITE.address.street,
+    addressLocality: SITE.address.city,
+    addressRegion: SITE.address.region,
+    postalCode: SITE.address.postalCode,
+    addressCountry: SITE.address.country,
+  },
+  founder: { '@type': 'Person', name: SITE.founder.name, jobTitle: SITE.founder.role },
+};
+---
+
+<Base description={SITE.description} jsonLd={jsonLd}>
+  <section class="hero container">
+    <h1>Network and cloud strategy, from people who have built it.</h1>
+    <p class="lede">
+      Boutique technology consulting for telecom operators, technology vendors and investors. Strategic advisory and
+      execution since 2009.
+    </p>
+    <div class="actions">
+      <a class="btn" href={url(PRIMARY_CTA.href)}>{PRIMARY_CTA.label}</a>
+      <a class="btn btn-ghost" href={url('/offerings/')}>See our work</a>
+    </div>
+  </section>
+
+  <section class="container" aria-label="IPJunction in numbers">
+    <dl class="stats">
+      {
+        stats.map(([n, label]) => (
+          <div>
+            <dt>{label}</dt>
+            <dd>{n}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  <section class="section container split" aria-labelledby="what-we-do">
+    <div class="sticky stack">
+      <h2 id="what-we-do">What we do</h2>
+      <p class="lede">
+        Advice and delivery across telecommunications, cable, mobile, cloud and enterprise networks.
+      </p>
+      <a class="link-arrow" href={url('/platform/')}>See the technology we work in</a>
+    </div>
+    <ul class="rule-list capabilities">
+      {
+        capabilities.map(([title, body]) => (
+          <li class="reveal">
+            <h3>{title}</h3>
+            <p>{body}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="section container" aria-labelledby="selected-work">
+    <h2 id="selected-work">Selected work</h2>
+    <div class="work">
+      {
+        featured.map((e, i) => (
+          <article class={`cell cell-${i} reveal`}>
+            <p class="practice">{e.practice}</p>
+            <h3>{e.client}</h3>
+            <p class="summary">{e.summary}</p>
+          </article>
+        ))
+      }
+    </div>
+    <p class="more"><a class="link-arrow" href={url('/offerings/')}>All representative engagements</a></p>
+  </section>
+
+  <section class="section container founder" aria-labelledby="founder">
+    <Picture
+      src={founder}
+      formats={['avif', 'webp']}
+      widths={[360, 560]}
+      sizes="(min-width: 900px) 420px, 100vw"
+      alt="Deepak Kataria, Founder and Managing Director of IPJunction"
+      class="portrait reveal"
+    />
+    <div class="stack-lg">
+      <h2 id="founder">Founder-led, on every engagement.</h2>
+      <p class="lede">
+        Deepak Kataria has spent three decades in telecommunications. He was most recently an architect on AT&amp;T's
+        Network Cloud and O-RAN deployments, and co-chairs the IEEE Future Networks AI/ML Working Group.
+      </p>
+      <a class="link-arrow" href={url('/about/')}>Meet the founder</a>
+    </div>
+  </section>
+
+  <section class="section container" aria-labelledby="insights">
+    <div class="insights-head">
+      <h2 id="insights">Latest insights</h2>
+      <a class="link-arrow" href={url('/insights/')}>All insights</a>
+    </div>
+    <ol class="posts">
+      {
+        posts.map((p) => (
+          <li class="reveal">
+            <a href={url(`/insights/${p.id}/`)}>
+              <time datetime={p.data.date.toISOString()}>{fmt.format(p.data.date)}</time>
+              <span class="title">{p.data.title}</span>
+              <span class="desc">{p.data.description}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <CtaBand />
+</Base>
+
+<style>
+  .hero {
+    display: grid;
+    gap: var(--s3);
+    justify-items: start;
+    padding-block: clamp(3.5rem, 2rem + 7vw, 6rem) var(--s6);
+  }
+  .hero h1 {
+    max-width: 26ch;
+    font-size: clamp(2.5rem, 1.5rem + 4vw, 4.25rem);
+    letter-spacing: -0.04em;
+    line-height: 1.04;
+  }
+  .hero .lede {
+    max-width: 46ch;
+  }
+  .hero .actions {
+    margin-top: var(--s2);
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0;
+    border-top: 1px solid var(--border);
+  }
+  .stats div {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    gap: var(--s1);
+    padding: var(--s4) var(--s3) var(--s4) 0;
+  }
+  .stats dd {
+    margin: 0;
+    font-size: var(--step-4);
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .stats dt {
+    color: var(--muted);
+  }
+  @media (min-width: 900px) {
+    .stats {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .stats div + div {
+      padding-left: var(--s3);
+      border-left: 1px solid var(--border);
+    }
+  }
+
+  .capabilities h3 {
+    font-size: var(--step-2);
+    font-weight: 520;
+  }
+
+  .work {
+    display: grid;
+    gap: var(--s2);
+    margin-top: var(--s5);
+  }
+  .cell {
+    display: grid;
+    align-content: start;
+    gap: var(--s2);
+    padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+  .cell-0 {
+    background: var(--invert-bg);
+    color: var(--invert-text);
+    border-color: var(--invert-bg);
+    align-content: end;
+    min-height: 22rem;
+  }
+  .cell-0 h3 {
+    font-size: var(--step-3);
+  }
+  .cell-0 .summary {
+    color: var(--invert-muted);
+    font-size: var(--step-1);
+    max-width: 44ch;
+  }
+  .cell-1 {
+    background: var(--surface-2);
+  }
+  .cell h3 {
+    font-size: var(--step-2);
+  }
+  .practice {
+    font-size: var(--step--1);
+    color: var(--muted);
+  }
+  .cell-0 .practice {
+    color: var(--invert-muted);
+  }
+  .summary {
+    color: var(--muted);
+  }
+  .more {
+    margin-top: var(--s4);
+  }
+  @media (min-width: 900px) {
+    .work {
+      grid-template-columns: 7fr 5fr;
+      grid-template-rows: 1fr 1fr;
+    }
+    .cell-0 {
+      grid-row: span 2;
+      min-height: 30rem;
+    }
+  }
+
+  .founder {
+    display: grid;
+    gap: var(--s5);
+    align-items: center;
+  }
+  .founder :global(.portrait) {
+    width: 100%;
+    max-width: 420px;
+    border-radius: var(--radius);
+    filter: contrast(1.02);
+  }
+  @media (min-width: 900px) {
+    .founder {
+      grid-template-columns: 5fr 7fr;
+      gap: var(--s6);
+    }
+  }
+
+  .insights-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--s2);
+  }
+  .posts {
+    list-style: none;
+    margin-top: var(--s4);
+  }
+  .posts li {
+    border-top: 1px solid var(--border);
+  }
+  .posts a {
+    display: grid;
+    gap: var(--s1);
+    padding-block: var(--s3);
+    text-decoration: none;
+  }
+  .posts time,
+  .posts .desc {
+    color: var(--muted);
+  }
+  .posts time {
+    font-size: var(--step--1);
+  }
+  .posts .title {
+    font-size: var(--step-2);
+    font-weight: 520;
+    letter-spacing: -0.015em;
+    line-height: 1.25;
+  }
+  .posts a:hover .title {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+  @media (min-width: 900px) {
+    .posts a {
+      grid-template-columns: 9rem 1fr;
+      column-gap: var(--s4);
+    }
+    .posts .desc {
+      grid-column: 2;
+    }
+  }
+</style>

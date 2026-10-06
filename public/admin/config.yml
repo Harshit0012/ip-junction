@@ -1,0 +1,60 @@
+# Sveltia CMS (https://github.com/sveltia/sveltia-cms). Editors open /admin/ and sign in with GitHub.
+# Prototype: "Sign in with Token" using a fine-grained GitHub token scoped to this repo (Contents: read/write).
+# Production: deploy sveltia-cms-auth to Cloudflare Workers and set base_url below so editors use normal GitHub login.
+backend:
+  name: github
+  repo: Harshit0012/ip-junction
+  branch: main
+  # base_url: https://sveltia-cms-auth.<your-subdomain>.workers.dev
+  commit_messages:
+    create: 'content: add {{collection}} "{{slug}}"'
+    update: 'content: update {{collection}} "{{slug}}"'
+    delete: 'content: delete {{collection}} "{{slug}}"'
+
+# Uploaded images. public_folder must include the site base path while hosted at /ip-junction/.
+media_folder: public/uploads
+public_folder: /ip-junction/uploads
+
+collections:
+  - name: insights
+    label: Insights
+    label_singular: Article
+    folder: src/content/insights
+    create: true
+    slug: '{{slug}}'
+    sortable_fields: [date, title]
+    fields:
+      - { name: title, label: Title, widget: string, hint: 'Up to 120 characters.' }
+      - { name: description, label: Summary, widget: text, hint: 'One or two sentences, up to 220 characters. Used in listings and search results.' }
+      - { name: date, label: Publish date, widget: datetime, time_format: false, date_format: 'YYYY-MM-DD', format: 'YYYY-MM-DD' }
+      - { name: author, label: Byline, widget: string, default: IPJunction }
+      - { name: topics, label: Topics, widget: list, required: false }
+      - { name: draft, label: Draft, widget: boolean, default: true, hint: 'Drafts are not published.' }
+      - { name: body, label: Article, widget: markdown }
+
+  - name: changelog
+    label: Updates
+    label_singular: Update
+    folder: src/content/changelog
+    create: true
+    slug: '{{year}}-{{month}}-{{slug}}'
+    fields:
+      - { name: title, label: Title, widget: string }
+      - { name: date, label: Date, widget: datetime, time_format: false, date_format: 'YYYY-MM-DD', format: 'YYYY-MM-DD' }
+      - { name: draft, label: Draft, widget: boolean, default: false }
+      - { name: body, label: Body, widget: markdown }
+
+  - name: careers
+    label: Careers
+    label_singular: Role
+    folder: src/content/careers
+    create: true
+    slug: '{{slug}}'
+    fields:
+      - { name: title, label: Role title, widget: string }
+      - { name: location, label: Location, widget: string, default: 'Remote, US' }
+      - { name: type, label: Type, widget: select, options: [Full-time, Contract, Part-time] }
+      - { name: summary, label: Summary, widget: text, hint: 'Up to 220 characters.' }
+      - { name: date, label: Posted, widget: datetime, time_format: false, date_format: 'YYYY-MM-DD', format: 'YYYY-MM-DD' }
+      - { name: draft, label: Draft, widget: boolean, default: true, hint: 'Turn off to publish the role.' }
+      - { name: body, label: Description, widget: markdown }

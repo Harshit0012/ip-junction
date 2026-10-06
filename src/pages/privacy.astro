@@ -1,0 +1,64 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import { CITY_LINE, SITE } from '../data/site';
+---
+
+<Base title="Privacy" description="How the IPJunction website collects and uses personal data.">
+  <PageHead title="Privacy policy" lede="Last updated October 6, 2026. Draft pending legal review." />
+  <section class="container prose">
+    <p>
+      {SITE.legalName} ("IPJunction", "we") runs this website. This policy explains what personal data the site collects,
+      why, and what choices you have. It covers this website only, not client engagements, which are governed by their
+      own agreements.
+    </p>
+
+    <h2>What we collect</h2>
+    <ul>
+      <li>
+        <strong>Messages you send us.</strong> If you use the contact form we receive your name, email address, company (if
+        given), topic and message. The form is delivered by Web3Forms, which forwards it to our inbox.
+      </li>
+      <li>
+        <strong>Bookings.</strong> If you open the scheduler, it loads from Cal.com, which processes the details you enter
+        to book a call and may set its own cookies. It does not load unless you open it.
+      </li>
+      <li>
+        <strong>Analytics, only with consent.</strong> If you accept analytics we use Umami to count page views. Umami sets
+        no cookies and does not store IP addresses or build profiles. If you decline, no analytics script loads.
+      </li>
+      <li>
+        <strong>Hosting logs.</strong> The site is hosted on GitHub Pages. GitHub may log technical data such as IP
+        addresses for security and operations under its own privacy statement.
+      </li>
+    </ul>
+
+    <h2>What we store on your device</h2>
+    <p>
+      One item in your browser's local storage records your analytics choice so we do not ask again. You can change it
+      at any time with "Cookie settings" in the footer, or clear it in your browser.
+    </p>
+
+    <h2>How we use your data</h2>
+    <p>
+      We use messages and bookings only to reply to you and to discuss potential work. We do not sell personal data or
+      use it for advertising.
+    </p>
+
+    <h2>How long we keep it</h2>
+    <p>
+      We keep correspondence for as long as needed to respond and for our ordinary business records, then delete it.
+    </p>
+
+    <h2>Your rights</h2>
+    <p>
+      Depending on where you live, you may have rights to access, correct, delete or restrict use of your personal data.
+      To exercise them, email <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
+    </p>
+
+    <h2>Contact</h2>
+    <p>
+      {SITE.legalName}, {SITE.address.street}, {CITY_LINE}, USA.
+    </p>
+  </section>
+</Base>

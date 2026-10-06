@@ -1,0 +1,94 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import CtaBand from '../components/CtaBand.astro';
+
+const models = [
+  {
+    name: 'Assessment',
+    terms: 'Fixed scope, fixed fee',
+    body: 'An audit, gap analysis or TCO model that ends in a clear recommendation.',
+    outputs: ['Network or platform audit', 'Gap analysis', 'Multi-year TCO model'],
+  },
+  {
+    name: 'Program support',
+    terms: 'Scoped by phase',
+    body: 'We lead or join your team through design, procurement and migration.',
+    outputs: ['RFI and RFP development', 'Architecture and solution design', 'Migration and cutover planning'],
+  },
+  {
+    name: 'Research & advisory',
+    terms: 'Per deliverable or retainer',
+    body: 'Independent analysis for vendors, operators and investors.',
+    outputs: ['White papers', 'Technology briefings', 'Investment due diligence'],
+  },
+];
+---
+
+<Base title="Engagements" description="How IPJunction engagements are scoped and priced: assessments, program support, and research and advisory.">
+  <PageHead
+    title="Scoped to the decision, not the hour."
+    lede="Every engagement starts with a 30-minute call to define the problem. You get a written scope and a fixed price or a phased plan before any work begins."
+  />
+
+  <section class="container models" aria-label="Engagement models">
+    {
+      models.map((m) => (
+        <article class="model reveal">
+          <div class="stack">
+            <h2>{m.name}</h2>
+            <p class="terms">{m.terms}</p>
+          </div>
+          <div class="stack">
+            <p class="body">{m.body}</p>
+            <ul class="outputs">
+              {m.outputs.map((o) => (
+                <li>{o}</li>
+              ))}
+            </ul>
+          </div>
+        </article>
+      ))
+    }
+  </section>
+
+  <CtaBand title="Tell us the decision. We will scope the work." />
+</Base>
+
+<style>
+  .models {
+    border-top: 1px solid var(--border);
+  }
+  .model {
+    display: grid;
+    gap: var(--s3);
+    padding-block: var(--s5);
+    border-bottom: 1px solid var(--border);
+  }
+  .model h2 {
+    font-size: var(--step-3);
+  }
+  .terms {
+    color: var(--muted);
+  }
+  .body {
+    font-size: var(--step-1);
+    max-width: 48ch;
+  }
+  .outputs {
+    list-style: none;
+    display: grid;
+    gap: var(--s1);
+    color: var(--muted);
+  }
+  .outputs li::before {
+    content: '\2192\00a0\00a0';
+    color: var(--text);
+  }
+  @media (min-width: 900px) {
+    .model {
+      grid-template-columns: 5fr 7fr;
+      gap: var(--s6);
+    }
+  }
+</style>

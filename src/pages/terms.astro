@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import { SITE } from '../data/site';
+---
+
+<Base title="Terms" description="Terms of use for the IPJunction website.">
+  <PageHead title="Terms of use" lede="Last updated October 6, 2026. Draft pending legal review." />
+  <section class="container prose">
+    <p>By using this website you agree to these terms. If you do not agree, please do not use the site.</p>
+
+    <h2>Information only</h2>
+    <p>
+      Content on this site, including Insights articles, is general information. It is not professional advice for your
+      situation, and no client relationship is formed by reading it or contacting us. Engagements are governed by a
+      separate written agreement.
+    </p>
+
+    <h2>Intellectual property</h2>
+    <p>
+      The site's text, design and logo belong to {SITE.legalName} unless stated otherwise. Client and third-party names
+      are used to describe past work and remain the property of their owners. You may quote short passages with
+      attribution and a link.
+    </p>
+
+    <h2>Third-party services</h2>
+    <p>
+      Some features use third-party services such as Cal.com and Web3Forms, which have their own terms. We are not
+      responsible for third-party sites linked from this one.
+    </p>
+
+    <h2>No warranty</h2>
+    <p>
+      We work to keep the site accurate, but it is provided as is, without warranties. To the extent the law allows, we
+      are not liable for losses arising from its use.
+    </p>
+
+    <h2>Changes</h2>
+    <p>We may update these terms. The date at the top shows the latest version.</p>
+
+    <h2>Governing law</h2>
+    <p>These terms are governed by the laws of the State of New Jersey, USA.</p>
+
+    <h2>Contact</h2>
+    <p>Questions: <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.</p>
+  </section>
+</Base>

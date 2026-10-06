@@ -1,0 +1,146 @@
+---
+import Logo from './Logo.astro';
+import { NAV, PRIMARY_CTA, url } from '../data/site';
+
+const here = Astro.url.pathname.replace(/\/?$/, '/');
+const current = (href: string): 'page' | 'true' | undefined => {
+  if (here === url(href)) return 'page';
+  return here.startsWith(url(href)) ? 'true' : undefined;
+};
+---
+
+<header class="site-header">
+  <div class="container bar">
+    <a href={url('/')} class="home" aria-label="IPJunction home"><Logo /></a>
+
+    <nav aria-label="Main">
+      <ul class="desktop">
+        {
+          NAV.map((item) => (
+            <li>
+              <a href={url(item.href)} aria-current={current(item.href)}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <details class="mobile">
+        <summary>Menu</summary>
+        <ul>
+          {
+            NAV.map((item) => (
+              <li>
+                <a href={url(item.href)} aria-current={current(item.href)}>
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+          <li><a href={url('/contact/')}>Contact</a></li>
+        </ul>
+      </details>
+    </nav>
+
+    <a class="btn cta" href={url(PRIMARY_CTA.href)}>{PRIMARY_CTA.label}</a>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: saturate(140%) blur(10px);
+    -webkit-backdrop-filter: saturate(140%) blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: var(--s3);
+    height: 68px;
+  }
+  .home {
+    display: inline-flex;
+    padding-block: 4px;
+  }
+  nav {
+    margin-left: auto;
+  }
+  .desktop {
+    display: none;
+    list-style: none;
+    gap: 0.25rem;
+  }
+  .desktop a,
+  .mobile a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding-inline: 0.625rem;
+    color: var(--muted);
+    font-size: 0.9375rem;
+    text-decoration: none;
+    border-radius: var(--radius);
+    transition: color 160ms ease;
+  }
+  .desktop a:hover,
+  .desktop a[aria-current] {
+    color: var(--text);
+  }
+  .desktop a[aria-current] {
+    text-decoration: underline;
+    text-underline-offset: 0.45em;
+  }
+  .cta {
+    display: none;
+  }
+  .mobile summary {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding-inline: 0.875rem;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    cursor: pointer;
+    list-style: none;
+    font-weight: 520;
+  }
+  .mobile summary::-webkit-details-marker {
+    display: none;
+  }
+  .mobile[open] summary {
+    border-color: var(--text);
+  }
+  .mobile ul {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 68px;
+    display: grid;
+    gap: 0.25rem;
+    padding: var(--s2) var(--gutter) var(--s3);
+    list-style: none;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+  .mobile a {
+    width: 100%;
+    min-height: 44px;
+    font-size: var(--step-1);
+    color: var(--text);
+  }
+  @media (min-width: 1080px) {
+    .desktop {
+      display: flex;
+    }
+    .mobile {
+      display: none;
+    }
+    .cta {
+      display: inline-flex;
+    }
+  }
+</style>

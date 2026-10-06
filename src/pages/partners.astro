@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import CtaBand from '../components/CtaBand.astro';
+
+const ways = [
+  ['Co-authored research', 'White papers that explain a new architecture to the operators who will buy it, as we did for NEC America and InterDigital.'],
+  ['Joint workshops and events', 'Technical workshops and IEEE sessions on AI/ML, edge, Open RAN and network automation.'],
+  ['Solution design', 'Independent system design for new products entering operator networks, as with Fujitsu on small-cell backhaul and C-RAN fronthaul.'],
+];
+---
+
+<Base title="Partner with us" description="Partner with IPJunction on co-authored research, joint workshops and solution design for operator networks.">
+  <PageHead
+    title="Partner with us."
+    lede="For technology vendors and research groups that want independent, operator-grade thinking behind a new product or idea."
+  />
+  <section class="container">
+    <ul class="rule-list">
+      {
+        ways.map(([t, d]) => (
+          <li class="reveal">
+            <h2 class="h">{t}</h2>
+            <p>{d}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+  <CtaBand title="Have an idea worth writing up?" />
+</Base>
+
+<style>
+  .h {
+    font-size: var(--step-2);
+  }
+</style>

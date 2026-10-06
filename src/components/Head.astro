@@ -1,0 +1,47 @@
+---
+import '@fontsource-variable/geist/wght.css';
+import fontUrl from '@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url';
+import { SITE, url } from '../data/site';
+
+export interface SeoProps {
+  title?: string;
+  description?: string;
+  ogType?: 'website' | 'article';
+  jsonLd?: Record<string, unknown>;
+  noindex?: boolean;
+}
+
+const { title, description = SITE.description, ogType = 'website', jsonLd, noindex = false } = Astro.props as SeoProps;
+const fullTitle = title ? `${title} | ${SITE.name}` : `${SITE.name} | ${SITE.tagline}`;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL(url('/og.png'), Astro.site).href;
+const robots = SITE.indexable && !noindex ? 'index, follow' : 'noindex, nofollow';
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+<meta name="robots" content={robots} />
+<meta name="referrer" content="strict-origin-when-cross-origin" />
+<meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0e0e0e" media="(prefers-color-scheme: dark)" />
+<link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
+<link rel="preload" href={fontUrl} as="font" type="font/woff2" crossorigin />
+<link rel="sitemap" href={url('/sitemap-index.xml')} />
+
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:type" content={ogType} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+
+{jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd).replace(/</g, '\\u003c')} />}

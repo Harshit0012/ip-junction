@@ -1,0 +1,108 @@
+---
+import { SITE, url } from '../data/site';
+---
+
+{
+  SITE.umamiId && (
+    <section class="consent" data-consent data-umami-id={SITE.umamiId} aria-labelledby="consent-title" hidden>
+      <div class="inner">
+        <h2 id="consent-title">Analytics</h2>
+        <p>
+          With your permission we count visits with Umami, which sets no cookies and stores no personal data. See our{' '}
+          <a href={url('/privacy/')}>privacy policy</a>.
+        </p>
+        <div class="actions">
+          <button type="button" class="btn btn-ghost" data-consent-choice="denied">Decline</button>
+          <button type="button" class="btn btn-ghost" data-consent-choice="granted">Accept</button>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<script>
+  const KEY = 'ipj-consent';
+  const banner = document.querySelector<HTMLElement>('[data-consent]');
+
+  function read(): string | null {
+    try {
+      return localStorage.getItem(KEY);
+    } catch {
+      return null;
+    }
+  }
+
+  function loadAnalytics(id: string): void {
+    if (document.querySelector('script[data-website-id]')) return;
+    const s = document.createElement('script');
+    s.defer = true;
+    s.src = 'https://cloud.umami.is/script.js';
+    s.dataset.websiteId = id;
+    document.head.appendChild(s);
+  }
+
+  if (banner) {
+    const id = banner.dataset.umamiId ?? '';
+    const choice = read();
+    if (choice === 'granted') loadAnalytics(id);
+    if (choice === null) banner.hidden = false;
+
+    banner.querySelectorAll<HTMLButtonElement>('[data-consent-choice]').forEach((btn) =>
+      btn.addEventListener('click', () => {
+        const value = btn.dataset.consentChoice ?? 'denied';
+        try {
+          localStorage.setItem(KEY, value);
+        } catch {
+          /* storage blocked: choice applies to this page view only */
+        }
+        banner.hidden = true;
+        document.getElementById('main')?.focus();
+        if (value === 'granted') loadAnalytics(id);
+      }),
+    );
+
+    document.querySelectorAll('[data-consent-open]').forEach((el) =>
+      el.addEventListener('click', () => {
+        banner.hidden = false;
+        banner.querySelector<HTMLButtonElement>('button')?.focus();
+      }),
+    );
+  }
+</script>
+
+<style>
+  .consent {
+    position: fixed;
+    inset: auto var(--s2) var(--s2) var(--s2);
+    z-index: 60;
+    display: flex;
+    justify-content: flex-end;
+    pointer-events: none;
+  }
+  .consent[hidden] {
+    display: none;
+  }
+  .inner {
+    max-width: 420px;
+    padding: var(--s3);
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 32px rgb(0 0 0 / 0.08);
+    pointer-events: auto;
+  }
+  h2 {
+    font-size: var(--step-1);
+  }
+  p {
+    margin-top: var(--s1);
+    font-size: 0.9375rem;
+    color: var(--muted);
+  }
+  .actions {
+    margin-top: var(--s2);
+  }
+  .actions .btn {
+    flex: 1;
+  }
+</style>

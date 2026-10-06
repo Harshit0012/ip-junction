@@ -1,0 +1,152 @@
+---
+import { Picture } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import CtaBand from '../components/CtaBand.astro';
+import founder from '../assets/founder.jpg';
+import { SITE } from '../data/site';
+
+const ericsson = [
+  ['E2E Architect, AT&T Network Cloud', 'End-to-end cloud architecture and migration strategy. The platform was later acquired by Microsoft Azure.'],
+  ['Principal Development Lead, Airship 2.0', 'Architecture and development for the next-generation OpenStack deployment platform.'],
+  ['Principal Architect, AT&T O-RAN O-Cloud', 'O-Cloud deployments supporting O-RAN integration and cloud-native workloads.'],
+  ['E2E Architect, AT&T O-RAN SMO', 'End-to-end architecture and deployment of the Service Management and Orchestration platform.'],
+  ['Lead Cloud Auditor, Xplore', 'Cloud assurance and security audits for compliance and operational excellence.'],
+];
+
+const leadership = [
+  ['Co-Chair, AI/ML Working Group', 'IEEE Future Networks Initiative'],
+  ['Opening keynote, WWRF 2024', 'Plus several keynotes at IEEE ANTS'],
+  ['Top Committer of the Year 2021', 'Linux Foundation Edge (Akraino)'],
+  ['10+ IEEE events organized', 'Conferences, symposia, workshops and webinars reaching 1,000+ industry leaders'],
+];
+---
+
+<Base title="About" description="IPJunction Inc. is a boutique technology consulting firm founded in 2009 in Holmdel, New Jersey, led by founder Deepak Kataria.">
+  <PageHead
+    title="About IPJunction"
+    lede={`${SITE.legalName} is a boutique technology consulting firm founded in ${SITE.foundingYear} and based in Holmdel, New Jersey. We provide strategic advisory and execution across telecommunications, cable, mobile, cloud and next-generation network technologies.`}
+  />
+
+  <section class="container intro measure">
+    <p>
+      We help organizations modernize technology platforms, improve operational efficiency and move faster on new
+      technology, with results that can be measured against the business case. Clients include tier-1 operators,
+      technology vendors and private equity firms.
+    </p>
+  </section>
+
+  <section class="section container founder" aria-labelledby="founder">
+    <Picture
+      src={founder}
+      formats={['avif', 'webp']}
+      widths={[360, 560]}
+      sizes="(min-width: 900px) 420px, 100vw"
+      alt="Deepak Kataria"
+      class="portrait"
+      loading="eager"
+    />
+    <div class="stack-lg">
+      <div class="stack">
+        <h2 id="founder">{SITE.founder.name}</h2>
+        <p class="muted">{SITE.founder.role}</p>
+      </div>
+      <p class="lede">
+        Three decades in telecommunications, cloud and infrastructure, network transformation, AI and network
+        automation, and technology strategy.
+      </p>
+      <p class="measure">
+        Deepak held six major roles as a Principal Solutions Consultant at Ericsson, leading strategic architecture,
+        cloud transformation and large-scale network deployments for AT&amp;T and other customers.
+      </p>
+    </div>
+  </section>
+
+  <section class="section container split" aria-labelledby="ericsson">
+    <div class="sticky">
+      <h2 id="ericsson">Recent architecture work</h2>
+    </div>
+    <ul class="rule-list">
+      {
+        ericsson.map(([role, body]) => (
+          <li class="reveal">
+            <h3>{role}</h3>
+            <p>{body}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="section container" aria-labelledby="leadership">
+    <h2 id="leadership">Thought leadership</h2>
+    <dl class="leadership">
+      {
+        leadership.map(([t, d]) => (
+          <div class="reveal">
+            <dt>{t}</dt>
+            <dd>{d}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  <CtaBand title="Talk to Deepak directly." body="Every engagement starts with a 30-minute call with the founder." />
+</Base>
+
+<style>
+  .intro {
+    font-size: var(--step-1);
+  }
+  .founder {
+    display: grid;
+    gap: var(--s5);
+    align-items: center;
+  }
+  .founder :global(.portrait) {
+    width: 100%;
+    max-width: 420px;
+    border-radius: var(--radius);
+  }
+  @media (min-width: 900px) {
+    .founder {
+      grid-template-columns: 5fr 7fr;
+      gap: var(--s6);
+    }
+  }
+  .leadership {
+    display: grid;
+    gap: var(--s2);
+    margin: var(--s5) 0 0;
+  }
+  .leadership div {
+    padding: var(--s4);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+  .leadership div:first-child {
+    background: var(--invert-bg);
+    color: var(--invert-text);
+    border-color: var(--invert-bg);
+  }
+  .leadership div:first-child dd {
+    color: var(--invert-muted);
+  }
+  .leadership dt {
+    font-size: var(--step-2);
+    font-weight: 540;
+    letter-spacing: -0.015em;
+    line-height: 1.25;
+  }
+  .leadership dd {
+    margin: var(--s2) 0 0;
+    color: var(--muted);
+  }
+  @media (min-width: 900px) {
+    .leadership {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

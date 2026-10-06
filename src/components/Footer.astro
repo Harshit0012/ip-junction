@@ -1,0 +1,107 @@
+---
+import Logo from './Logo.astro';
+import { CITY_LINE, FOOTER_GROUPS, SITE, url } from '../data/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container grid">
+    <div class="brand stack">
+      <Logo width={120} />
+      <p class="muted">{SITE.tagline}</p>
+      <address class="muted">
+        {SITE.address.street}<br />
+        {CITY_LINE}
+      </address>
+    </div>
+    {
+      FOOTER_GROUPS.map((group) => (
+        <div>
+          <h2 class="group-title">{group.title}</h2>
+          <ul>
+            {group.links.map((l) => (
+              <li>
+                <a href={url(l.href)}>{l.label}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+  <div class="container legal">
+    <p>&copy; {year} {SITE.legalName}</p>
+    {SITE.umamiId && <button type="button" class="linkish" data-consent-open>Cookie settings</button>}
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: var(--s6);
+    padding-block: var(--s6) var(--s4);
+    border-top: 1px solid var(--border);
+    font-size: 0.9375rem;
+  }
+  .grid {
+    display: grid;
+    gap: var(--s5);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .brand {
+    grid-column: 1 / -1;
+  }
+  address {
+    font-style: normal;
+  }
+  .group-title {
+    font-size: var(--step--1);
+    font-weight: 560;
+    letter-spacing: 0;
+    color: var(--muted);
+    margin-bottom: var(--s2);
+  }
+  ul {
+    list-style: none;
+    display: grid;
+    gap: 0.25rem;
+  }
+  a {
+    display: inline-flex;
+    min-height: 32px;
+    align-items: center;
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+  .legal {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--s2);
+    margin-top: var(--s6);
+    padding-top: var(--s3);
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+  .linkish {
+    min-height: 32px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    cursor: pointer;
+  }
+  @media (min-width: 900px) {
+    .grid {
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+    }
+    .brand {
+      grid-column: auto;
+    }
+  }
+</style>

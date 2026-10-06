@@ -1,0 +1,127 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import CtaBand from '../components/CtaBand.astro';
+
+const steps = [
+  {
+    verb: 'Assess',
+    body: 'Audit the current network, systems and costs so the decision starts from facts.',
+    example: 'IP/MPLS network audit for Vesta Corporation’s distributed data center.',
+  },
+  {
+    verb: 'Decide',
+    body: 'Model the options and their costs over the real life of the network, not one budget cycle.',
+    example: 'SDN/NFV TCO analysis for Verizon across wireless, wireline, core and OSS/BSS over 10 years.',
+  },
+  {
+    verb: 'Deliver',
+    body: 'Lead or join the program team through procurement, migration and cutover.',
+    example: 'Program plan for Charter’s 27-market migration ahead of the Comcast/TWC merger.',
+  },
+  {
+    verb: 'Measure',
+    body: 'Tie results back to the business case we started with, and say plainly where they differ.',
+    example: null,
+  },
+];
+
+const principles = [
+  ['Senior people on every engagement', 'The person who scopes the work does the work.'],
+  ['Vendor-neutral', 'Recommendations follow the evidence, not a product line.'],
+  ['Standards-grounded', 'Our requirements and designs trace back to 3GPP, IETF, O-RAN and IEEE work.'],
+];
+---
+
+<Base title="Approach" description="How IPJunction runs engagements: assess, decide, deliver, measure. Advice that carries through to the cutover plan.">
+  <PageHead
+    title="Advice you can execute."
+    lede="Most strategy work stops at the slide deck. Ours carries through to the cutover plan."
+  />
+
+  <section class="container" aria-label="How we work">
+    <ol class="steps">
+      {
+        steps.map((s) => (
+          <li class="reveal">
+            <h2>{s.verb}</h2>
+            <div class="stack">
+              <p class="body">{s.body}</p>
+              {s.example && <p class="example">Example: {s.example}</p>}
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section class="section container" aria-labelledby="principles">
+    <h2 id="principles">How we hold ourselves to it</h2>
+    <dl class="principles">
+      {
+        principles.map(([t, d]) => (
+          <div class="reveal">
+            <dt>{t}</dt>
+            <dd>{d}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  <CtaBand />
+</Base>
+
+<style>
+  .steps {
+    list-style: none;
+    border-top: 1px solid var(--border);
+  }
+  .steps li {
+    display: grid;
+    gap: var(--s2);
+    padding-block: var(--s5);
+    border-bottom: 1px solid var(--border);
+  }
+  .steps h2 {
+    font-size: var(--step-4);
+    font-weight: 500;
+    letter-spacing: -0.04em;
+  }
+  .body {
+    font-size: var(--step-2);
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    max-width: 34ch;
+  }
+  .example {
+    color: var(--muted);
+    max-width: 60ch;
+  }
+  @media (min-width: 900px) {
+    .steps li {
+      grid-template-columns: 5fr 7fr;
+      gap: var(--s6);
+      align-items: baseline;
+    }
+  }
+  .principles {
+    display: grid;
+    gap: var(--s4);
+    margin: var(--s5) 0 0;
+  }
+  .principles dt {
+    font-weight: 560;
+    font-size: var(--step-1);
+  }
+  .principles dd {
+    margin: var(--s1) 0 0;
+    color: var(--muted);
+  }
+  @media (min-width: 900px) {
+    .principles {
+      grid-template-columns: 1.2fr 1fr 1fr;
+      gap: var(--s5);
+    }
+  }
+</style>

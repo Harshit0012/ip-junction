@@ -1,0 +1,57 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+
+const entries = (await getCollection('changelog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+const rendered = await Promise.all(entries.map(async (e) => ({ e, Content: (await render(e)).Content })));
+const fmt = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+---
+
+<Base title="Updates" description="News and updates from IPJunction.">
+  <PageHead title="Updates" lede="News from the firm and changes to this site." />
+  <section class="container">
+    <ol class="entries">
+      {
+        rendered.map(({ e, Content }) => (
+          <li>
+            <time datetime={e.data.date.toISOString()}>{fmt.format(e.data.date)}</time>
+            <div class="stack">
+              <h2>{e.data.title}</h2>
+              <div class="prose">
+                <Content />
+              </div>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+</Base>
+
+<style>
+  .entries {
+    list-style: none;
+  }
+  .entries li {
+    display: grid;
+    gap: var(--s2);
+    padding-block: var(--s4);
+    border-top: 1px solid var(--border);
+  }
+  .entries h2 {
+    font-size: var(--step-2);
+  }
+  time {
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+  @media (min-width: 900px) {
+    .entries li {
+      grid-template-columns: 12rem 1fr;
+      gap: var(--s4);
+    }
+  }
+</style>

@@ -1,0 +1,46 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import { SITE, url } from '../data/site';
+
+const items = [
+  ['No tracking cookies', 'Analytics are cookie-free and only load if you accept them. Declining changes nothing else about the site.'],
+  ['No third-party scripts by default', 'The site loads its own code and fonts only. Scheduling loads from Cal.com only when you open it.'],
+  ['Content Security Policy', 'Every page ships a restrictive policy that limits which sources can run scripts, load frames or receive form data.'],
+  ['Encrypted in transit', 'The site is served over HTTPS only.'],
+  ['Minimal data', 'The contact form asks only for what we need to reply, and there are no accounts or logins on this site.'],
+];
+---
+
+<Base title="Trust" description="How the IPJunction website handles security and your data: no tracking cookies, consent-based analytics, CSP and HTTPS.">
+  <PageHead
+    title="Trust"
+    lede="Our clients share sensitive network and investment plans with us. This page covers how this website handles your data."
+  />
+
+  <section class="container">
+    <ul class="rule-list">
+      {
+        items.map(([t, d]) => (
+          <li>
+            <h2 class="h">{t}</h2>
+            <p>{d}</p>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="muted more">
+      Questions about confidentiality on an engagement? Email <a href={`mailto:${SITE.email}`}>{SITE.email}</a>. See
+      also our <a href={url('/privacy/')}>privacy policy</a>.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .h {
+    font-size: var(--step-1);
+  }
+  .more {
+    margin-top: var(--s4);
+  }
+</style>

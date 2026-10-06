@@ -1,0 +1,58 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import { SITE } from '../data/site';
+
+const roles = (await getCollection('careers', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+---
+
+<Base title="Careers" description="Work with IPJunction. We work with a small network of senior network, cloud and telecom specialists.">
+  <PageHead
+    title="Careers"
+    lede="We work with a small network of senior specialists in networks, cloud and telecom strategy."
+  />
+
+  <section class="container">
+    {
+      roles.length === 0 ? (
+        <div class="empty stack">
+          <h2>No open roles right now.</h2>
+          <p class="muted measure">
+            If you have deep experience in carrier networks, cloud platforms or telecom strategy and want to hear about
+            future engagements, send a short note and a link to your work.
+          </p>
+          <a class="btn btn-ghost" href={`mailto:${SITE.email}?subject=Specialist%20network`}>
+            Introduce yourself
+          </a>
+        </div>
+      ) : (
+        <ul class="rule-list">
+          {roles.map((r) => (
+            <li>
+              <h2 class="role">{r.data.title}</h2>
+              <p>
+                {r.data.type}, {r.data.location}. {r.data.summary}
+              </p>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </section>
+</Base>
+
+<style>
+  .empty {
+    padding: var(--s5);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+  .empty h2,
+  .role {
+    font-size: var(--step-2);
+  }
+</style>

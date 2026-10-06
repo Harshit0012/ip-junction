@@ -1,0 +1,70 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { PRACTICES, byPractice } from '../data/engagements';
+
+const slug = (s: string) => s.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-');
+---
+
+<Base title="Offerings" description="Five practices with representative engagements for Verizon, Charter, Cox, SaskTel, NEC, Fujitsu, InterDigital, SPO Partners and others.">
+  <PageHead
+    title="Five practices, one standard of work."
+    lede="Strategic advisory and execution for telecom operators, technology vendors and private equity firms. Each practice below lists representative engagements."
+  >
+    <nav aria-label="Practices" class="jump">
+      <ul class="tags">
+        {
+          PRACTICES.map((p) => (
+            <li>
+              <a href={`#${slug(p.name)}`}>{p.name}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </PageHead>
+
+  {
+    PRACTICES.map((p) => (
+      <section class="section container split" id={slug(p.name)} aria-labelledby={`${slug(p.name)}-h`}>
+        <div class="sticky stack">
+          <h2 id={`${slug(p.name)}-h`}>{p.name}</h2>
+          <p class="muted">{p.intro}</p>
+        </div>
+        <ul class="rule-list">
+          {byPractice(p.name).map((e) => (
+            <li class="reveal">
+              <h3>{e.client}</h3>
+              <p>{e.summary}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+
+  <CtaBand />
+</Base>
+
+<style>
+  .jump {
+    margin-top: var(--s4);
+  }
+  .jump a {
+    text-decoration: none;
+    color: inherit;
+  }
+  .jump a:hover {
+    color: var(--text);
+  }
+  .jump li {
+    padding: 0;
+  }
+  .jump li a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 0.25rem 0.625rem;
+  }
+</style>
