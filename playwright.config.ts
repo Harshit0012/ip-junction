@@ -1,6 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const PORT = 4321;
+// Dedicated port so tests never attach to a running `astro dev` server (4321).
+const PORT = 4373;
 
 export default defineConfig({
   testDir: './tests',
@@ -21,7 +22,7 @@ export default defineConfig({
     command: `npm run build && npx astro preview --port ${PORT} --ignore-lock`,
     env: { PUBLIC_UMAMI_ID: 'test-site-id', PUBLIC_WEB3FORMS_KEY: 'test-key' },
     url: `http://localhost:${PORT}/ip-junction/`,
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
     timeout: 180_000,
   },
 });

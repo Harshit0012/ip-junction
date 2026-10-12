@@ -9,62 +9,104 @@ const slug = (s: string) => s.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0
 
 <Base title="Offerings" description="Five practices with representative engagements for Verizon, Charter, Cox, SaskTel, NEC, Fujitsu, InterDigital, SPO Partners and others.">
   <PageHead
+    kicker="Offerings"
     title="Five practices, one standard of work."
-    lede="Strategic advisory and execution for telecom operators, technology vendors and private equity firms. Each practice below lists representative engagements."
-  >
-    <nav aria-label="Practices" class="jump">
-      <ul class="tags">
-        {
-          PRACTICES.map((p) => (
-            <li>
-              <a href={`#${slug(p.name)}`}>{p.name}</a>
-            </li>
-          ))
-        }
-      </ul>
-    </nav>
-  </PageHead>
+    lede="Strategic advisory and execution, with representative engagements in each practice."
+  />
 
-  {
-    PRACTICES.map((p) => (
-      <section class="section container split" id={slug(p.name)} aria-labelledby={`${slug(p.name)}-h`}>
-        <div class="sticky stack">
-          <h2 id={`${slug(p.name)}-h`}>{p.name}</h2>
-          <p class="muted">{p.intro}</p>
-        </div>
-        <ul class="rule-list">
-          {byPractice(p.name).map((e) => (
-            <li class="reveal">
-              <h3>{e.client}</h3>
-              <p>{e.summary}</p>
-            </li>
-          ))}
-        </ul>
-      </section>
-    ))
-  }
+  <section class="section container" aria-label="Practices">
+    <div class="tiles">
+      {
+        PRACTICES.map((p, i) => {
+          const items = byPractice(p.name);
+          return (
+            <article class={`tile reveal${items.length > 3 ? ' wide' : ''}`} id={slug(p.name)}>
+              <p class="kicker">Practice {String(i + 1).padStart(2, '0')}</p>
+              <h2>{p.name}</h2>
+              <p class="dots" role="img" aria-label={`${items.length} representative engagements`}>
+                {items.map(() => <i />)}
+              </p>
+              <ul class="eng">
+                {items.map((e) => (
+                  <li>
+                    <b>{e.client}</b>
+                    <span>{e.short}</span>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          );
+        })
+      }
+    </div>
+  </section>
 
-  <CtaBand />
+  <CtaBand title="Which practice fits your project?" label="Talk to us" />
 </Base>
 
 <style>
-  .jump {
-    margin-top: var(--s4);
+  .tiles {
+    display: grid;
+    gap: var(--s2);
   }
-  .jump a {
-    text-decoration: none;
-    color: inherit;
+  .tile {
+    display: grid;
+    align-content: start;
+    gap: var(--s1);
+    padding: 1.25rem 1.35rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
   }
-  .jump a:hover {
-    color: var(--text);
+  .tile h2 {
+    font-size: 1.35rem;
   }
-  .jump li {
-    padding: 0;
+  .dots {
+    display: flex;
+    gap: 0.35rem;
   }
-  .jump li a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 32px;
-    padding: 0.25rem 0.625rem;
+  .dots i {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .eng {
+    display: grid;
+    gap: 0.6rem var(--s4);
+    margin-top: var(--s1);
+    padding-top: var(--s2);
+    border-top: 1px solid var(--border);
+    list-style: none;
+  }
+  .eng li {
+    display: grid;
+    gap: 0.1rem;
+  }
+  .eng span {
+    color: var(--muted);
+    font-size: 0.92rem;
+  }
+  @media (min-width: 760px) {
+    .tiles {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+    .tile {
+      grid-column: span 3;
+    }
+    .tile.wide {
+      grid-column: span 6;
+    }
+    .tile.wide .eng {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 1000px) {
+    .tile {
+      grid-column: span 2;
+    }
+    .tile.wide {
+      grid-column: span 4;
+    }
   }
 </style>

@@ -1,0 +1,246 @@
+---
+import { LAYERS } from '../data/layers';
+
+interface Props {
+  /** pins: engagements pinned to layers. tags: technologies per layer. */
+  show?: 'pins' | 'tags';
+  title: string;
+  description: string;
+}
+const { show = 'pins', title, description } = Astro.props;
+---
+
+<figure class="stack-fig">
+  <p class="end" aria-hidden="true">Device</p>
+  <ol class="layers" aria-label={title}>
+    <li class="rail motion-only" aria-hidden="true"><i></i></li>
+    {
+      LAYERS.map((l) => (
+        <li class={`layer layer-${l.id}`}>
+          <svg class="glyph" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+            {l.id === 'radio' && (
+              <>
+                <path class="ln" d="M24 44V22M16 44h16" />
+                <circle class="fl" cx="24" cy="18" r="3" />
+                <path class="arc a1" d="M17 11a10 10 0 0 1 14 0" />
+                <path class="arc a2" d="M12 6a17 17 0 0 1 24 0" />
+              </>
+            )}
+            {l.id === 'transport' && (
+              <>
+                <path class="ln flow" d="M6 24h36" />
+                <circle class="fl" cx="8" cy="24" r="4" />
+                <circle class="fl" cx="24" cy="24" r="4" />
+                <circle class="fl" cx="40" cy="24" r="4" />
+              </>
+            )}
+            {l.id === 'core' && (
+              <>
+                <path class="ln" d="M24 5l16 9v20l-16 9-16-9V14z" />
+                <circle class="fl" cx="24" cy="24" r="6" />
+              </>
+            )}
+            {l.id === 'cloud' && (
+              <>
+                <path class="ln" d="M14 34a8 8 0 0 1 0-16 11 11 0 0 1 21 3 7 7 0 0 1 0 13z" />
+                <circle class="fl" cx="24" cy="26" r="3" />
+              </>
+            )}
+            {l.id === 'oss' && (
+              <>
+                <rect class="ln" x="7" y="7" width="15" height="15" rx="2" />
+                <rect class="ln" x="26" y="7" width="15" height="15" rx="2" />
+                <rect class="ln" x="7" y="26" width="15" height="15" rx="2" />
+                <rect class="fl" x="26" y="26" width="15" height="15" rx="2" />
+              </>
+            )}
+          </svg>
+          <div class="txt">
+            <h3>{l.name}</h3>
+            <p>{l.line}</p>
+          </div>
+          <ul class="chips" aria-label={show === 'pins' ? `${l.name} engagements` : `${l.name} technologies`}>
+            {show === 'pins'
+              ? l.pins.map((p) => (
+                  <li class="pin">
+                    <b>{p.client}</b> {p.note}
+                  </li>
+                ))
+              : l.tags.map((t) => <li>{t}</li>)}
+          </ul>
+        </li>
+      ))
+    }
+  </ol>
+  <p class="end" aria-hidden="true">Cloud</p>
+  <figcaption class="visually-hidden">{description}</figcaption>
+</figure>
+
+<style>
+  .stack-fig {
+    position: relative;
+    margin: 0;
+    padding: var(--s3) var(--s2);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .end {
+    margin: 0;
+    padding: 0.35rem 0 0.35rem 0;
+    color: var(--muted);
+    font-size: 0.72rem;
+    font-weight: 650;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .layers {
+    position: relative;
+    display: grid;
+    gap: 0.6rem;
+    padding-left: 1.4rem;
+    list-style: none;
+  }
+  /* Traffic rail: one streak travels the full height, device to cloud. */
+  .rail {
+    position: absolute;
+    inset: 0 auto 0 0.3rem;
+    width: 2px;
+    overflow: hidden;
+    background: var(--border);
+    pointer-events: none;
+  }
+  .rail i {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 44%, var(--accent) 47%, var(--accent) 53%, transparent 56%);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .rail i {
+      animation: ls-packet 2.4s cubic-bezier(0.45, 0, 0.55, 1) 2;
+    }
+  }
+  @keyframes ls-packet {
+    from {
+      transform: translateY(-50%);
+    }
+    to {
+      transform: translateY(50%);
+    }
+  }
+  .layer {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 2.8rem 1fr;
+    gap: 0.2rem 0.85rem;
+    align-items: center;
+    padding: 0.8rem 0.9rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+  }
+  .layer-oss {
+    background: var(--accent-tint);
+    border-style: dashed;
+    border-color: var(--accent);
+  }
+  .glyph {
+    grid-row: span 2;
+    width: 2.8rem;
+    height: 2.8rem;
+    background: var(--surface);
+    border-radius: 50%;
+    padding: 0.35rem;
+    box-sizing: border-box;
+  }
+  .ln,
+  .arc {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .fl {
+    fill: var(--accent);
+  }
+  .flow {
+    stroke-dasharray: 3 5;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .flow {
+      animation: ls-dash 1.2s linear 4;
+    }
+    .arc {
+      animation: ls-pulse 2.4s ease-in-out 2;
+    }
+    .a2 {
+      animation-delay: 0.5s;
+    }
+  }
+  @keyframes ls-dash {
+    to {
+      stroke-dashoffset: -16;
+    }
+  }
+  @keyframes ls-pulse {
+    50% {
+      opacity: 0.25;
+    }
+  }
+  .txt h3 {
+    font-size: 1.05rem;
+  }
+  .txt p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+  .chips {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+    margin: 0.3rem 0 0;
+  }
+  .chips:empty {
+    display: none;
+  }
+  .chips li {
+    padding: 0.2rem 0.65rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: var(--surface);
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+  .chips .pin {
+    border-color: var(--accent);
+    color: var(--muted);
+  }
+  .chips .pin b {
+    color: var(--accent-text);
+    font-weight: 650;
+  }
+  @media (min-width: 820px) {
+    .stack-fig {
+      padding: var(--s4);
+    }
+    .layer {
+      grid-template-columns: 3.4rem minmax(14rem, 1fr) minmax(0, 1.5fr);
+      padding: 1rem 1.25rem;
+    }
+    .glyph {
+      grid-row: auto;
+      width: 3.4rem;
+      height: 3.4rem;
+    }
+    .chips {
+      grid-column: auto;
+      margin: 0;
+      justify-content: flex-end;
+    }
+  }
+</style>

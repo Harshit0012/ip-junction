@@ -29,32 +29,34 @@ export const CITY_LINE = `${SITE.address.city}, ${SITE.address.region} ${SITE.ad
 export const PRIMARY_CTA = { label: 'Book a call', href: '/contact/#book' } as const;
 
 export const NAV = [
-  { label: 'Expertise', href: '/platform/' },
+  { label: 'Home', href: '/' },
+  { label: 'Platform', href: '/platform/' },
   { label: 'Approach', href: '/approach/' },
   { label: 'Offerings', href: '/offerings/' },
-  { label: 'Engagements', href: '/pricing/' },
+  { label: 'Pricing', href: '/pricing/' },
   { label: 'Industries', href: '/industries/' },
   { label: 'Insights', href: '/insights/' },
   { label: 'About', href: '/about/' },
+  { label: 'Contact', href: '/contact/' },
 ] as const;
 
 export const FOOTER_GROUPS = [
   {
-    title: 'Firm',
+    title: 'Company',
     links: [
       { label: 'About', href: '/about/' },
       { label: 'Careers', href: '/careers/' },
-      { label: 'Partner with us', href: '/partners/' },
+      { label: 'Design partners', href: '/partners/' },
       { label: 'Contact', href: '/contact/' },
     ],
   },
   {
-    title: 'Work',
+    title: 'Services',
     links: [
+      { label: 'Platform', href: '/platform/' },
       { label: 'Offerings', href: '/offerings/' },
-      { label: 'Industries', href: '/industries/' },
-      { label: 'Ecosystem', href: '/ecosystem/' },
-      { label: 'Insights', href: '/insights/' },
+      { label: 'Pricing', href: '/pricing/' },
+      { label: 'Integrations', href: '/ecosystem/' },
     ],
   },
   {

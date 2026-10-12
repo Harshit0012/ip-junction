@@ -13,39 +13,29 @@ const groups = [
 ];
 ---
 
-<Base title="Ecosystem" description="The standards bodies and open-source communities IPJunction's work draws on: IEEE, LF Edge, O-RAN, 3GPP, IETF, OpenStack and SDN.">
+<Base title="Integrations" description="The standards bodies and open-source communities IPJunction's work draws on: IEEE, LF Edge, O-RAN, 3GPP, IETF, OpenStack and SDN.">
   <PageHead
-    title="Standards and communities our work draws on."
+    kicker="Integrations"
+    title="Standards and communities we build on."
     lede="We work in the open specifications that operators buy against, and in the communities that write them."
   />
-  <section class="container">
-    <ul class="rule-list">
+  <section class="section container">
+    <div class="grid-3">
       {
         groups.map(([name, body]) => (
-          <li class="reveal">
+          <article class="card reveal">
             <h2 class="h">{name}</h2>
             <p>{body}</p>
-          </li>
+          </article>
         ))
       }
-    </ul>
+    </div>
   </section>
   <CtaBand />
 </Base>
 
 <style>
   .h {
-    font-size: var(--step-2);
-  }
-  .rule-list li {
-    display: grid;
-    gap: var(--s1);
-  }
-  @media (min-width: 900px) {
-    .rule-list li {
-      grid-template-columns: 5fr 7fr;
-      gap: var(--s6);
-      align-items: baseline;
-    }
+    font-size: 1.3rem;
   }
 </style>

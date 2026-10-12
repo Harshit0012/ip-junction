@@ -10,28 +10,29 @@ const ways = [
 ];
 ---
 
-<Base title="Partner with us" description="Partner with IPJunction on co-authored research, joint workshops and solution design for operator networks.">
+<Base title="Design partners" description="Partner with IPJunction on co-authored research, joint workshops and solution design for operator networks.">
   <PageHead
-    title="Partner with us."
+    kicker="Design partners"
+    title="Build with us."
     lede="For technology vendors and research groups that want independent, operator-grade thinking behind a new product or idea."
   />
-  <section class="container">
-    <ul class="rule-list">
+  <section class="section container">
+    <div class="grid-3">
       {
         ways.map(([t, d]) => (
-          <li class="reveal">
+          <article class="card reveal">
             <h2 class="h">{t}</h2>
             <p>{d}</p>
-          </li>
+          </article>
         ))
       }
-    </ul>
+    </div>
   </section>
   <CtaBand title="Have an idea worth writing up?" />
 </Base>
 
 <style>
   .h {
-    font-size: var(--step-2);
+    font-size: 1.3rem;
   }
 </style>

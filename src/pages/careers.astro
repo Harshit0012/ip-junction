@@ -11,11 +11,12 @@ const roles = (await getCollection('careers', ({ data }) => !data.draft)).sort(
 
 <Base title="Careers" description="Work with IPJunction. We work with a small network of senior network, cloud and telecom specialists.">
   <PageHead
-    title="Careers"
+    kicker="Careers"
+    title="Work with a small network of specialists."
     lede="We work with a small network of senior specialists in networks, cloud and telecom strategy."
   />
 
-  <section class="container">
+  <section class="section container">
     {
       roles.length === 0 ? (
         <div class="empty stack">

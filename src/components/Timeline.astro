@@ -1,0 +1,128 @@
+---
+interface Step {
+  label: string;
+  note: string;
+  example?: string;
+}
+interface Props {
+  steps: readonly Step[];
+}
+const { steps } = Astro.props;
+---
+
+<ol class="tl" style={`--n:${steps.length}`}>
+  {
+    steps.map((s, i) => (
+      <li class="reveal" style={`--k:${i}`}>
+        <span class="dot" aria-hidden="true"></span>
+        <span class="n">{String(i + 1).padStart(2, '0')}</span>
+        <h3>{s.label}</h3>
+        <p>{s.note}</p>
+        {s.example && <p class="ex">{s.example}</p>}
+      </li>
+    ))
+  }
+  <li class="line" aria-hidden="true"></li>
+</ol>
+
+<style>
+  .tl {
+    position: relative;
+    display: grid;
+    gap: var(--s4);
+    padding-left: 2rem;
+    list-style: none;
+  }
+  .tl > li:not(.line) {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: 0.3rem;
+  }
+  .line {
+    position: absolute;
+    left: 0.45rem;
+    top: 0.6rem;
+    bottom: 0.6rem;
+    width: 2px;
+    background: var(--accent);
+    transform-origin: top center;
+  }
+  .dot {
+    position: absolute;
+    left: -2rem;
+    top: 0.35rem;
+    width: 0.95rem;
+    height: 0.95rem;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    background: var(--bg);
+  }
+  .n {
+    color: var(--warm);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    font-variant-numeric: tabular-nums;
+  }
+  h3 {
+    font-size: var(--step-2);
+  }
+  p {
+    color: var(--muted);
+  }
+  .ex {
+    color: var(--ink);
+    font-size: 0.9rem;
+    padding-top: 0.35rem;
+  }
+  @keyframes draw-y {
+    from {
+      transform: scaleY(0);
+    }
+    to {
+      transform: scaleY(1);
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .line {
+        animation: draw-y linear both;
+        animation-timeline: view();
+        animation-range: entry 0% cover 60%;
+      }
+    }
+  }
+  @media (min-width: 820px) {
+    .tl {
+      grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+      gap: var(--s3);
+      padding: 2.2rem 0 0;
+    }
+    .line {
+      inset: 0.55rem 0 auto 0;
+      width: auto;
+      height: 2px;
+      transform-origin: left center;
+    }
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        .line {
+          animation-name: draw-x;
+        }
+      }
+    }
+    .dot {
+      left: 0;
+      top: -2.2rem;
+    }
+    @keyframes draw-x {
+      from {
+        transform: scaleX(0);
+      }
+      to {
+        transform: scaleX(1);
+      }
+    }
+  }
+</style>

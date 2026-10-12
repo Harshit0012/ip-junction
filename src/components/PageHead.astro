@@ -2,12 +2,14 @@
 interface Props {
   title: string;
   lede?: string;
+  kicker?: string;
 }
-const { title, lede } = Astro.props;
+const { title, lede, kicker } = Astro.props;
 ---
 
 <section class="page-head container">
-  <h1 class="measure">{title}</h1>
+  {kicker && <p class="kicker">{kicker}</p>}
+  <h1>{title}</h1>
   {lede && <p class="lede">{lede}</p>}
   <slot />
 </section>

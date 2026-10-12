@@ -3,92 +3,126 @@ import Base from '../layouts/Base.astro';
 import PageHead from '../components/PageHead.astro';
 import CtaBand from '../components/CtaBand.astro';
 
+// Track shapes show how each model is scoped; they carry no durations or prices.
 const models = [
   {
+    badge: 'Model 1',
     name: 'Assessment',
     terms: 'Fixed scope, fixed fee',
-    body: 'An audit, gap analysis or TCO model that ends in a clear recommendation.',
-    outputs: ['Network or platform audit', 'Gap analysis', 'Multi-year TCO model'],
+    shape: 'one',
+    outputs: ['Audit', 'Gap analysis', 'TCO model'],
   },
   {
+    badge: 'Model 2',
     name: 'Program support',
     terms: 'Scoped by phase',
-    body: 'We lead or join your team through design, procurement and migration.',
-    outputs: ['RFI and RFP development', 'Architecture and solution design', 'Migration and cutover planning'],
+    shape: 'phases',
+    outputs: ['RFI and RFP', 'Solution design', 'Migration planning'],
   },
   {
+    badge: 'Model 3',
     name: 'Research & advisory',
     terms: 'Per deliverable or retainer',
-    body: 'Independent analysis for vendors, operators and investors.',
-    outputs: ['White papers', 'Technology briefings', 'Investment due diligence'],
+    shape: 'ticks',
+    outputs: ['White papers', 'Briefings', 'Due diligence'],
   },
-];
+] as const;
 ---
 
-<Base title="Engagements" description="How IPJunction engagements are scoped and priced: assessments, program support, and research and advisory.">
+<Base title="Pricing" description="How IPJunction engagements are scoped and priced: assessments, program support, and research and advisory.">
   <PageHead
+    kicker="Pricing"
     title="Scoped to the decision, not the hour."
-    lede="Every engagement starts with a 30-minute call to define the problem. You get a written scope and a fixed price or a phased plan before any work begins."
+    lede="Tailored to each engagement, with a written scope and a fixed price or phased plan first."
   />
 
-  <section class="container models" aria-label="Engagement models">
-    {
-      models.map((m) => (
-        <article class="model reveal">
-          <div class="stack">
-            <h2>{m.name}</h2>
+  <section class="section container" aria-labelledby="models-h">
+    <div class="section-head">
+      <h2 id="models-h">Three ways to engage</h2>
+    </div>
+    <div class="grid-3">
+      {
+        models.map((m) => (
+          <article class="card reveal">
+            <p><span class="badge">{m.badge}</span></p>
+            <h3>{m.name}</h3>
             <p class="terms">{m.terms}</p>
-          </div>
-          <div class="stack">
-            <p class="body">{m.body}</p>
-            <ul class="outputs">
+            <div class={`track ${m.shape}`} aria-hidden="true">
+              <span class="axis" />
+              {m.shape === 'one' && <i class="draw block" />}
+              {m.shape === 'phases' && (
+                <>
+                  <i class="draw block p1" />
+                  <i class="draw block p2" />
+                  <i class="draw block p3" />
+                </>
+              )}
+              {m.shape === 'ticks' && Array.from({ length: 6 }).map((_, k) => <i class="tick" style={`--k:${k}`} />)}
+            </div>
+            <ul class="tags">
               {m.outputs.map((o) => (
                 <li>{o}</li>
               ))}
             </ul>
-          </div>
-        </article>
-      ))
-    }
+          </article>
+        ))
+      }
+    </div>
   </section>
 
-  <CtaBand title="Tell us the decision. We will scope the work." />
+  <CtaBand title="Want pricing for your project?" body="It starts with a 30-minute call." label="Request pricing" />
 </Base>
 
 <style>
-  .models {
-    border-top: 1px solid var(--border);
-  }
-  .model {
-    display: grid;
-    gap: var(--s3);
-    padding-block: var(--s5);
-    border-bottom: 1px solid var(--border);
-  }
-  .model h2 {
-    font-size: var(--step-3);
-  }
   .terms {
-    color: var(--muted);
+    color: var(--accent-text);
+    font-weight: 600;
   }
-  .body {
-    font-size: var(--step-1);
-    max-width: 48ch;
+  .track {
+    position: relative;
+    height: 3rem;
+    margin-block: var(--s1);
   }
-  .outputs {
-    list-style: none;
-    display: grid;
-    gap: var(--s1);
-    color: var(--muted);
+  .axis {
+    position: absolute;
+    inset: auto 0 0.5rem 0;
+    height: 1px;
+    background: var(--border-strong);
   }
-  .outputs li::before {
-    content: '\2192\00a0\00a0';
-    color: var(--text);
+  .block {
+    position: absolute;
+    bottom: 0.5rem;
+    height: 1.6rem;
+    border-radius: 4px;
+    background: var(--accent);
   }
-  @media (min-width: 900px) {
-    .model {
-      grid-template-columns: 5fr 7fr;
-      gap: var(--s6);
-    }
+  .one .block {
+    left: 0;
+    width: 42%;
+  }
+  .p1 {
+    left: 0;
+    width: 26%;
+  }
+  .p2 {
+    left: 34%;
+    width: 30%;
+    background: var(--accent-strong);
+  }
+  .p3 {
+    left: 72%;
+    width: 28%;
+  }
+  .tick {
+    position: absolute;
+    bottom: 0.5rem;
+    left: calc(var(--k) * 19%);
+    width: 6px;
+    height: 1.6rem;
+    border-radius: 3px;
+    background: var(--accent);
+  }
+  .tick:nth-child(odd) {
+    height: 1.1rem;
   }
 </style>

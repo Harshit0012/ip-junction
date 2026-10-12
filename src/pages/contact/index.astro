@@ -10,11 +10,12 @@ const topics = ['Network strategy', 'Cloud & infrastructure', 'Investment adviso
 
 <Base title="Contact" description="Book a 30-minute call with IPJunction or send us a note. Holmdel, New Jersey.">
   <PageHead
+    kicker="Contact"
     title="Let's talk about the decision in front of you."
     lede="A 30-minute call is enough to tell whether we can help."
   />
 
-  <section class="container layout">
+  <section class="section container layout">
     <div class="stack-lg">
       <section id="book" class="book" aria-labelledby="book-title">
         <h2 id="book-title">Book a call</h2>
@@ -166,6 +167,10 @@ const topics = ['Network strategy', 'Cloud & infrastructure', 'Investment adviso
     border-radius: var(--radius);
     background: var(--surface);
   }
+  .book h2,
+  .details h2 {
+    font-size: var(--step-2);
+  }
   .cal-frame {
     width: 100%;
     min-height: 640px;
@@ -197,8 +202,12 @@ const topics = ['Network strategy', 'Cloud & infrastructure', 'Investment adviso
     border: 1px solid var(--border-strong);
     border-radius: var(--radius);
   }
-  .details h2 {
-    font-size: var(--step-2);
+  .details {
+    align-self: start;
+    padding: var(--s4);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
   }
   .details dl {
     display: grid;

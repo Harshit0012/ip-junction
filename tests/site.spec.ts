@@ -57,15 +57,14 @@ test.describe('every route', () => {
   }
 });
 
-test('dark mode passes axe on home and contact', async ({ page }) => {
+test('stays light when the system prefers dark', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'dark' });
   await blockThirdParties(page);
   await preConsent(page, 'denied');
-  for (const route of ['', 'contact/', 'about/']) {
-    await page.goto(route);
-    const axe = await new AxeBuilder({ page }).withTags(WCAG).analyze();
-    expect(axe.violations.map((v) => `${route} ${v.id}`)).toEqual([]);
-  }
+  await page.goto('');
+  expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe('rgb(244, 246, 249)');
+  const axe = await new AxeBuilder({ page }).withTags(WCAG).analyze();
+  expect(axe.violations.map((v) => v.id)).toEqual([]);
 });
 
 test('unknown route serves the custom 404', async ({ page }) => {
@@ -140,6 +139,29 @@ test.describe('contact form', () => {
   });
 });
 
+test('bio modal opens, is labelled, closes with Escape and returns focus', async ({ page }) => {
+  await preConsent(page, 'denied');
+  await page.goto('about/');
+  const open = page.getByRole('button', { name: 'Full bio' });
+  await open.click();
+  const dialog = page.getByRole('dialog', { name: 'Deepak Kataria' });
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toContainText('Bell Laboratories');
+  const axe = await new AxeBuilder({ page }).withTags(WCAG).analyze();
+  expect(axe.violations.map((v) => v.id)).toEqual([]);
+  await page.keyboard.press('Escape');
+  await expect(dialog).toBeHidden();
+  await expect(open).toBeFocused();
+});
+
+test('desktop nav lists all nine pages', async ({ page, isMobile }) => {
+  test.skip(isMobile, 'desktop only');
+  await preConsent(page, 'denied');
+  await page.goto('');
+  const links = await page.getByRole('navigation', { name: 'Main' }).locator('ul.desktop a').allInnerTexts();
+  expect(links).toEqual(['Home', 'Platform', 'Approach', 'Offerings', 'Pricing', 'Industries', 'Insights', 'About', 'Contact']);
+});
+
 test('mobile menu opens and navigates', async ({ page, isMobile }) => {
   test.skip(!isMobile, 'mobile only');
   await preConsent(page, 'denied');
@@ -158,4 +180,70 @@ test('no horizontal overflow at 320px', async ({ page }) => {
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     expect(overflow, route).toBeLessThanOrEqual(0);
   }
+});
+
+test.describe('redesign visuals', () => {
+  test('home layer cross-section shows five layers with engagements pinned', async ({ page }) => {
+    await preConsent(page, 'denied');
+    await page.goto('');
+    const layers = page.getByRole('list', { name: 'IPJunction across the network stack' }).locator('> li.layer');
+    await expect(layers).toHaveCount(5);
+    await expect(layers.locator('h3')).toHaveText(['Radio', 'Transport IP/MPLS', 'Core', 'Cloud and edge', 'OSS/BSS']);
+    for (const client of ['Verizon', 'Charter', 'Vesta', 'Fujitsu', 'SPO Partners']) {
+      await expect(page.locator('.pin', { hasText: client })).toHaveCount(1);
+    }
+  });
+
+  test('traffic animation is hidden under reduced motion', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await preConsent(page, 'denied');
+    await page.goto('');
+    await expect(page.locator('.rail')).toBeHidden();
+  });
+
+  test('decorative animations stop within 5 seconds', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await preConsent(page, 'denied');
+    for (const route of ['', 'industries/', 'insights/']) {
+      await page.goto(route);
+      const infinite = await page.evaluate(() =>
+        document.getAnimations().filter((a) => a.effect?.getComputedTiming().iterations === Infinity && !(a instanceof CSSTransition)).length,
+      );
+      expect(infinite, route).toBe(0);
+    }
+  });
+
+  test('traffic rail animates when motion is allowed', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await preConsent(page, 'denied');
+    await page.goto('');
+    const name = await page.locator('.rail i').evaluate((el) => getComputedStyle(el).animationName);
+    expect(name).not.toBe('none');
+  });
+
+  for (const route of ['', 'platform/', 'approach/', 'offerings/', 'pricing/', 'industries/', 'insights/', 'about/']) {
+    test(`/${route} stays under the visible word budget`, async ({ page }) => {
+      await preConsent(page, 'denied');
+      await page.goto(route);
+      const words = await page.locator('main').evaluate((el) => (el as HTMLElement).innerText.split(/\s+/).filter(Boolean).length);
+      expect(words).toBeLessThanOrEqual(260);
+    });
+  }
+
+  test('no horizontal overflow at 320px on redesigned pages', async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 800 });
+    await preConsent(page, 'denied');
+    for (const route of ['', 'platform/', 'approach/', 'offerings/', 'pricing/', 'industries/', 'insights/', 'about/']) {
+      await page.goto(route);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth), route).toBeLessThanOrEqual(0);
+    }
+  });
+
+  test('no em dashes in page copy', async ({ page }) => {
+    await preConsent(page, 'denied');
+    for (const route of ['', 'platform/', 'approach/', 'offerings/', 'pricing/', 'industries/', 'insights/', 'about/']) {
+      await page.goto(route);
+      expect(await page.locator('main').innerText(), route).not.toContain('\u2014');
+    }
+  });
 });

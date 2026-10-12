@@ -48,16 +48,18 @@ const jsonLd = {
   .head {
     display: grid;
     gap: var(--s3);
-    padding-block: clamp(3rem, 2rem + 4vw, 5rem) var(--s5);
+    padding-block: clamp(2.5rem, 2rem + 3vw, 4.5rem) var(--s4);
     max-width: 68ch;
   }
   .head h1 {
     font-size: var(--step-4);
+    max-width: none;
   }
   .back {
     justify-self: start;
     min-height: 24px;
-    color: var(--muted);
+    color: var(--accent-text);
+    font-weight: 600;
     text-decoration: none;
   }
   .back::before {

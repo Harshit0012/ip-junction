@@ -5,79 +5,99 @@ import CtaBand from '../components/CtaBand.astro';
 import { byIndustry, type Industry } from '../data/engagements';
 
 const industries: { name: Industry; body: string }[] = [
-  { name: 'Telecom operators', body: 'Wireless and wireline carriers planning network investment, rollout and transformation.' },
-  { name: 'Cable operators', body: 'MSOs moving voice, video and data onto IP platforms and integrating acquired markets.' },
-  { name: 'Technology vendors', body: 'Equipment and technology companies that need independent research and solution design.' },
-  { name: 'Cloud & enterprise networks', body: 'Data center and enterprise operators auditing and modernizing their networks.' },
-  { name: 'Private equity', body: 'Investors evaluating spectrum, network assets and the operators that run them.' },
+  { name: 'Telecom operators', body: 'Wireless and wireline carriers.' },
+  { name: 'Cable operators', body: 'Cable operators and MSOs.' },
+  { name: 'Technology vendors', body: 'Equipment and technology vendors.' },
+  { name: 'Cloud & enterprise networks', body: 'Distributed data center operators.' },
+  { name: 'Private equity', body: 'Investors in networks and spectrum.' },
 ];
 ---
 
 <Base title="Industries" description="IPJunction works with telecom operators, cable operators, technology vendors, cloud and enterprise networks, and private equity firms.">
   <PageHead
-    title="Who we work with."
-    lede="Operators, the vendors who supply them, and the investors who fund them. We understand the network from each side of the table."
+    kicker="Industries"
+    title="Built for the people who run, supply and fund networks."
+    lede="We know the network from each side of the table."
   />
 
-  <section class="container grid" aria-label="Industries">
-    {
-      industries.map((ind, i) => (
-        <article class={`industry reveal ${i === 0 ? 'wide' : ''}`}>
-          <h2>{ind.name}</h2>
-          <p class="muted">{ind.body}</p>
-          <ul class="clients" aria-label={`${ind.name} clients`}>
-            {byIndustry(ind.name).map((e) => (
-              <li>{e.client}</li>
-            ))}
-          </ul>
-        </article>
-      ))
-    }
+  <section class="section container" aria-labelledby="focus-h">
+    <div class="section-head">
+      <h2 id="focus-h">Who we work with</h2>
+    </div>
+    <ul class="flows">
+      {
+        industries.map((ind) => (
+          <li class="flow reveal">
+            <div class="node">
+              <h3>{ind.name}</h3>
+              <p>{ind.body}</p>
+            </div>
+            <span class="wire" aria-hidden="true"><i class="motion-only" /></span>
+            <ul class="tags" aria-label={`${ind.name} clients`}>
+              {byIndustry(ind.name).map((e) => (
+                <li>{e.client}</li>
+              ))}
+            </ul>
+          </li>
+        ))
+      }
+    </ul>
   </section>
 
-  <CtaBand />
+  <CtaBand title="See how this maps to your environment." label="Talk to us" />
 </Base>
 
 <style>
-  .grid {
+  .flows {
     display: grid;
     gap: var(--s2);
+    list-style: none;
   }
-  .industry {
+  .flow {
     display: grid;
-    gap: var(--s2);
-    align-content: start;
-    padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+    gap: var(--s1);
+    padding: 1.1rem 1.25rem;
+    background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    background: var(--surface);
   }
-  .industry h2 {
-    font-size: var(--step-2);
+  .node h3 {
+    font-size: 1.2rem;
   }
-  .wide {
-    background: var(--surface-2);
+  .node p {
+    color: var(--muted);
+    font-size: 0.92rem;
   }
-  .clients {
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--s1) var(--s3);
-    margin-top: var(--s2);
-    padding-top: var(--s2);
-    border-top: 1px solid var(--border);
-    font-weight: 520;
+  .wire {
+    position: relative;
+    display: block;
+    height: 2px;
+    overflow: hidden;
+    background: var(--border-strong);
   }
-  @media (min-width: 900px) {
-    .grid {
-      grid-template-columns: repeat(6, 1fr);
+  .wire i {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, transparent 44%, var(--accent) 47%, var(--accent) 53%, transparent 56%);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .wire i {
+      animation: wire-travel 2.4s cubic-bezier(0.45, 0, 0.55, 1) 2;
     }
-    .industry {
-      grid-column: span 2;
+  }
+  @keyframes wire-travel {
+    from {
+      transform: translateX(-50%);
     }
-    .industry:nth-child(1),
-    .industry:nth-child(2) {
-      grid-column: span 3;
+    to {
+      transform: translateX(50%);
+    }
+  }
+  @media (min-width: 820px) {
+    .flow {
+      grid-template-columns: 16rem 1fr minmax(0, 1.4fr);
+      align-items: center;
+      gap: var(--s3);
     }
   }
 </style>

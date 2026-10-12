@@ -4,149 +4,299 @@ import Base from '../layouts/Base.astro';
 import PageHead from '../components/PageHead.astro';
 import CtaBand from '../components/CtaBand.astro';
 import founder from '../assets/founder.jpg';
-import { SITE } from '../data/site';
+import { CITY_LINE, SITE } from '../data/site';
 
-const ericsson = [
-  ['E2E Architect, AT&T Network Cloud', 'End-to-end cloud architecture and migration strategy. The platform was later acquired by Microsoft Azure.'],
-  ['Principal Development Lead, Airship 2.0', 'Architecture and development for the next-generation OpenStack deployment platform.'],
-  ['Principal Architect, AT&T O-RAN O-Cloud', 'O-Cloud deployments supporting O-RAN integration and cloud-native workloads.'],
-  ['E2E Architect, AT&T O-RAN SMO', 'End-to-end architecture and deployment of the Service Management and Orchestration platform.'],
-  ['Lead Cloud Auditor, Xplore', 'Cloud assurance and security audits for compliance and operational excellence.'],
-];
+const principles = [
+  ['Deep domain expertise', 'Three decades of telecom, cloud and network engineering.'],
+  ['Proven methodology', 'Assess, decide, deliver, measure.'],
+  ['Measurable impact', 'Every engagement ties to a business outcome.'],
+] as const;
+
+// Employers as listed in the founder bio. No dates or order are implied.
+const path = ['AT&T Bell Labs', 'Lucent Technologies', 'Fujitsu', 'Agere Systems', 'LSI', 'Ericsson'] as const;
 
 const leadership = [
   ['Co-Chair, AI/ML Working Group', 'IEEE Future Networks Initiative'],
-  ['Opening keynote, WWRF 2024', 'Plus several keynotes at IEEE ANTS'],
+  ['Opening keynote, WWRF 2024', 'Plus keynotes at IEEE ANTS'],
   ['Top Committer of the Year 2021', 'Linux Foundation Edge (Akraino)'],
-  ['10+ IEEE events organized', 'Conferences, symposia, workshops and webinars reaching 1,000+ industry leaders'],
+  ['10+ IEEE events organized', 'Reaching 1,000+ industry leaders'],
+] as const;
+
+const bio = [
+  'Deepak Kataria is a technology executive, entrepreneur and inventor with more than three decades of experience spanning telecommunications, cloud infrastructure, networking, semiconductors, open-source technologies and artificial intelligence. His career covers the full telecommunications value chain, from semiconductor design and systems to carrier networks and cloud-native infrastructure, with senior engineering and leadership roles at AT&T Bell Labs, Lucent Technologies, Fujitsu, Agere Systems, LSI and Ericsson.',
+  'As Principal Solution Consultant at Ericsson, he led strategic initiatives supporting AT&T’s cloud-native transformation, 5G Core, Open RAN and Cloud RAN programs. He founded IPJunction Inc., advising telecommunications clients on technology strategy, solution architecture and digital transformation.',
+  'A recognized leader in cloud-native networking and open-source innovation, Deepak has contributed to Airship and the Akraino Edge Stack, and was named Linux Foundation Edge Top Committer of the Year in 2021. He received the Bell Laboratories President’s Gold Award, holds multiple U.S. patents and has authored more than 30 refereed publications. He co-leads the IEEE Future Networks Initiative AI/ML Working Group and is a frequent keynote speaker.',
+  'He holds a B.S. in Electronics and Communications Engineering, pursued M.S. and Ph.D. studies in Electrical Engineering at Rutgers University, and completed Harvard University’s Emerging Leaders Program.',
 ];
 ---
 
 <Base title="About" description="IPJunction Inc. is a boutique technology consulting firm founded in 2009 in Holmdel, New Jersey, led by founder Deepak Kataria.">
   <PageHead
-    title="About IPJunction"
-    lede={`${SITE.legalName} is a boutique technology consulting firm founded in ${SITE.foundingYear} and based in Holmdel, New Jersey. We provide strategic advisory and execution across telecommunications, cable, mobile, cloud and next-generation network technologies.`}
+    kicker="About"
+    title="The firm and the person behind it."
+    lede={`${SITE.legalName}: boutique technology consulting since ${SITE.foundingYear}, measured by business outcomes.`}
   />
 
-  <section class="container intro measure">
-    <p>
-      We help organizations modernize technology platforms, improve operational efficiency and move faster on new
-      technology, with results that can be measured against the business case. Clients include tier-1 operators,
-      technology vendors and private equity firms.
-    </p>
-  </section>
-
-  <section class="section container founder" aria-labelledby="founder">
-    <Picture
-      src={founder}
-      formats={['avif', 'webp']}
-      widths={[360, 560]}
-      sizes="(min-width: 900px) 420px, 100vw"
-      alt="Deepak Kataria"
-      class="portrait"
-      loading="eager"
-    />
-    <div class="stack-lg">
-      <div class="stack">
-        <h2 id="founder">{SITE.founder.name}</h2>
-        <p class="muted">{SITE.founder.role}</p>
-      </div>
-      <p class="lede">
-        Three decades in telecommunications, cloud and infrastructure, network transformation, AI and network
-        automation, and technology strategy.
-      </p>
-      <p class="measure">
-        Deepak held six major roles as a Principal Solutions Consultant at Ericsson, leading strategic architecture,
-        cloud transformation and large-scale network deployments for AT&amp;T and other customers.
-      </p>
+  <section class="section container" aria-labelledby="principles-h">
+    <div class="section-head">
+      <h2 id="principles-h">How we work</h2>
     </div>
-  </section>
-
-  <section class="section container split" aria-labelledby="ericsson">
-    <div class="sticky">
-      <h2 id="ericsson">Recent architecture work</h2>
-    </div>
-    <ul class="rule-list">
+    <div class="grid-3">
       {
-        ericsson.map(([role, body]) => (
-          <li class="reveal">
-            <h3>{role}</h3>
-            <p>{body}</p>
-          </li>
+        principles.map(([t, d]) => (
+          <article class="card reveal">
+            <h3>{t}</h3>
+            <p>{d}</p>
+          </article>
         ))
       }
-    </ul>
+    </div>
   </section>
 
-  <section class="section container" aria-labelledby="leadership">
-    <h2 id="leadership">Thought leadership</h2>
-    <dl class="leadership">
+  <section class="band" aria-labelledby="leadership-h">
+    <div class="container lead">
+      <div class="stack">
+        <h2 id="leadership-h">Leadership</h2>
+      <article class="card person reveal">
+        <Picture
+          src={founder}
+          width={264}
+          height={264}
+          fit="cover"
+          position="top"
+          formats={['avif', 'webp']}
+          alt="Deepak Kataria"
+          class="headshot lg"
+          loading="lazy"
+        />
+        <h3>{SITE.founder.name}</h3>
+        <p class="role">{SITE.founder.role}</p>
+              <button type="button" class="bio-open" data-bio-open="bio-deepak">Full bio</button>
+      </article>
+      </div>
+      <div class="stack">
+        <h3 class="path-h">Experience from</h3>
+        <ol class="path">
+          {path.map((c) => <li class="reveal">{c}</li>)}
+          <li class="here reveal">IPJunction Inc., founded 2009</li>
+          <li class="rail" aria-hidden="true"></li>
+        </ol>
+      </div>
+    </div>
+    <dialog id="bio-deepak" class="bio-modal" aria-labelledby="bio-deepak-h">
+      <div class="bio-inner">
+        <form method="dialog" class="bio-close-row">
+          <button class="bio-close" aria-label="Close biography">&times;</button>
+        </form>
+        <Picture
+          src={founder}
+          width={264}
+          height={264}
+          fit="cover"
+          position="top"
+          formats={['avif', 'webp']}
+          alt=""
+          class="headshot lg"
+          loading="lazy"
+        />
+        <h3 id="bio-deepak-h">{SITE.founder.name}</h3>
+        <p class="role">{SITE.founder.role}</p>
+        <div class="bio-body">
+          {bio.map((p) => <p>{p}</p>)}
+        </div>
+      </div>
+    </dialog>
+  </section>
+
+  <section class="section container" aria-labelledby="thought-h">
+    <div class="section-head">
+      <h2 id="thought-h">Thought leadership</h2>
+    </div>
+    <div class="grid-2">
       {
         leadership.map(([t, d]) => (
-          <div class="reveal">
-            <dt>{t}</dt>
-            <dd>{d}</dd>
-          </div>
+          <article class="card reveal">
+            <h3>{t}</h3>
+            <p>{d}</p>
+          </article>
         ))
       }
-    </dl>
+    </div>
   </section>
 
-  <CtaBand title="Talk to Deepak directly." body="Every engagement starts with a 30-minute call with the founder." />
+  <section class="section container" aria-labelledby="office-h">
+    <div class="section-head">
+      <h2 id="office-h">Our office</h2>
+    </div>
+    <address class="reveal">
+      <b>Holmdel, New Jersey, USA</b><br />
+      {SITE.address.street}<br />
+      {CITY_LINE}
+    </address>
+  </section>
+
+  <CtaBand title="Talk to Deepak directly." body="Every engagement starts with a 30-minute call with the founder." label="Contact us" />
 </Base>
 
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-bio-open]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const dlg = document.getElementById(btn.dataset.bioOpen ?? '');
+      if (dlg instanceof HTMLDialogElement) dlg.showModal();
+    });
+  });
+  document.querySelectorAll<HTMLDialogElement>('dialog.bio-modal').forEach((dlg) => {
+    dlg.addEventListener('click', (e) => {
+      if (e.target === dlg) dlg.close();
+    });
+  });
+</script>
+
 <style>
-  .intro {
-    font-size: var(--step-1);
+  address {
+    font-style: normal;
+    color: var(--muted);
   }
-  .founder {
+  address b {
+    color: var(--ink);
+  }
+  .lead {
     display: grid;
     gap: var(--s5);
-    align-items: center;
+    align-items: start;
   }
-  .founder :global(.portrait) {
-    width: 100%;
-    max-width: 420px;
-    border-radius: var(--radius);
+  .path-h {
+    font-size: var(--step-1);
   }
-  @media (min-width: 900px) {
-    .founder {
-      grid-template-columns: 5fr 7fr;
+  .path {
+    position: relative;
+    display: grid;
+    gap: 0.9rem;
+    padding-left: 1.6rem;
+    list-style: none;
+  }
+  .path li:not(.rail) {
+    position: relative;
+    font-weight: 600;
+  }
+  .path li:not(.rail)::before {
+    content: '';
+    position: absolute;
+    left: -1.6rem;
+    top: 0.45em;
+    width: 0.7rem;
+    height: 0.7rem;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    background: var(--band);
+  }
+  .path .here {
+    color: var(--accent-text);
+  }
+  .path .here::before {
+    background: var(--accent);
+  }
+  .path .rail {
+    position: absolute;
+    left: 0.3rem;
+    top: 0.8em;
+    bottom: 0.8em;
+    width: 2px;
+    background: var(--accent);
+    transform-origin: top center;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .path .rail {
+        animation: rail-y linear both;
+        animation-timeline: view();
+        animation-range: entry 0% cover 60%;
+      }
+    }
+  }
+  @keyframes rail-y {
+    from {
+      transform: scaleY(0);
+    }
+    to {
+      transform: scaleY(1);
+    }
+  }
+  @media (min-width: 820px) {
+    .lead {
+      grid-template-columns: auto 1fr;
       gap: var(--s6);
     }
   }
-  .leadership {
-    display: grid;
-    gap: var(--s2);
-    margin: var(--s5) 0 0;
+  .person {
+    justify-items: center;
+    text-align: center;
+    max-width: 22rem;
+    padding: var(--s4) var(--s3);
   }
-  .leadership div {
-    padding: var(--s4);
+  .person .role,
+  .bio-modal .role {
+    color: var(--text);
+  }
+  .bio-open {
+    min-height: 32px;
+    padding: 0 0 2px;
+    border: 0;
+    border-bottom: 1px solid var(--accent-text);
+    background: none;
+    color: var(--accent-text);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .bio-open::after {
+    content: '\00a0\2192';
+  }
+  .bio-modal {
+    width: min(640px, calc(100% - 2rem));
+    max-height: 86vh;
+    padding: 0;
     border: 1px solid var(--border);
     border-radius: var(--radius);
     background: var(--surface);
+    color: var(--text);
+    overflow: auto;
   }
-  .leadership div:first-child {
-    background: var(--invert-bg);
-    color: var(--invert-text);
-    border-color: var(--invert-bg);
+  .bio-modal::backdrop {
+    background: rgb(15 31 61 / 0.55);
   }
-  .leadership div:first-child dd {
-    color: var(--invert-muted);
+  .bio-inner {
+    display: grid;
+    gap: 0.5rem;
+    justify-items: center;
+    padding: 0 var(--s4) var(--s4);
+    text-align: center;
   }
-  .leadership dt {
-    font-size: var(--step-2);
-    font-weight: 540;
-    letter-spacing: -0.015em;
-    line-height: 1.25;
+  .bio-close-row {
+    position: sticky;
+    top: 0;
+    justify-self: end;
+    margin: 0 calc(-1 * var(--s4)) 0 0;
+    padding: var(--s1) 0 0;
   }
-  .leadership dd {
-    margin: var(--s2) 0 0;
+  .bio-close {
+    min-width: 44px;
+    min-height: 44px;
+    border: 0;
+    background: none;
     color: var(--muted);
+    font-size: 1.75rem;
+    line-height: 1;
+    cursor: pointer;
   }
-  @media (min-width: 900px) {
-    .leadership {
-      grid-template-columns: 1fr 1fr;
-    }
+  .bio-close:hover {
+    color: var(--text);
+  }
+  .bio-body {
+    display: grid;
+    gap: var(--s2);
+    margin-top: var(--s2);
+    text-align: left;
+    color: var(--muted);
   }
 </style>

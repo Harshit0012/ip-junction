@@ -1,0 +1,105 @@
+---
+interface Props {
+  kind: 'bars' | 'nodes' | 'waves';
+}
+const { kind } = Astro.props;
+---
+
+<svg class={`cover ${kind}`} viewBox="0 0 160 90" aria-hidden="true" focusable="false">
+  <rect class="bg" width="160" height="90" />
+  {
+    kind === 'bars' && (
+      <>
+        <path class="axis" d="M14 76h132" />
+        {[18, 30, 24, 44, 56, 70].map((h, i) => (
+          <rect class="bar" style={`--k:${i}`} x={20 + i * 22} y={76 - h} width="14" height={h} rx="2" />
+        ))}
+        <path class="trend" d="M27 56L49 46 71 52 93 32 115 20 137 8" />
+      </>
+    )
+  }
+  {
+    kind === 'nodes' && (
+      <>
+        <path class="link" d="M80 45L36 22M80 45L124 22M80 45L36 68M80 45L124 68" />
+        {[[36, 22], [124, 22], [36, 68], [124, 68]].map(([x, y]) => <circle class="n" cx={x} cy={y} r="8" />)}
+        <circle class="hub" cx="80" cy="45" r="13" />
+      </>
+    )
+  }
+  {
+    kind === 'waves' && (
+      <>
+        {[0, 1, 2, 3].map((i) => (
+          <path class="wave" style={`--k:${i}`} d={`M-10 ${24 + i * 14} Q 35 ${6 + i * 14} 80 ${24 + i * 14} T 170 ${24 + i * 14}`} />
+        ))}
+        <rect class="band" x="62" y="0" width="36" height="90" />
+      </>
+    )
+  }
+</svg>
+
+<style>
+  .cover {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+  .bg {
+    fill: var(--accent-tint);
+  }
+  .axis,
+  .link,
+  .wave,
+  .trend {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .trend {
+    stroke: var(--warm);
+  }
+  .bar {
+    fill: var(--accent);
+    transform-box: fill-box;
+    transform-origin: bottom;
+  }
+  .n {
+    fill: var(--surface);
+    stroke: var(--accent);
+    stroke-width: 1.5;
+  }
+  .hub {
+    fill: var(--accent);
+  }
+  .wave {
+    opacity: 0.7;
+  }
+  .band {
+    fill: var(--accent);
+    opacity: 0.14;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .bar {
+      animation: cv-grow 1.2s var(--ease) both;
+      animation-delay: calc(var(--k) * 90ms);
+    }
+    .wave {
+      animation: cv-sway 4s ease-in-out both;
+      animation-delay: calc(var(--k) * -1.2s);
+    }
+  }
+  @keyframes cv-grow {
+    from {
+      transform: scaleY(0);
+    }
+  }
+  @keyframes cv-sway {
+    to {
+      transform: translateX(-10px);
+    }
+  }
+</style>

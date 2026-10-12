@@ -11,8 +11,8 @@ const fmt = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', ye
 ---
 
 <Base title="Updates" description="News and updates from IPJunction.">
-  <PageHead title="Updates" lede="News from the firm and changes to this site." />
-  <section class="container">
+  <PageHead kicker="Updates" title="News and changes." lede="News from the firm and changes to this site." />
+  <section class="section container">
     <ol class="entries">
       {
         rendered.map(({ e, Content }) => (

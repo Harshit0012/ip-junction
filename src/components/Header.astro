@@ -1,17 +1,18 @@
 ---
 import Logo from './Logo.astro';
-import { NAV, PRIMARY_CTA, url } from '../data/site';
+import { NAV, url } from '../data/site';
 
 const here = Astro.url.pathname.replace(/\/?$/, '/');
 const current = (href: string): 'page' | 'true' | undefined => {
   if (here === url(href)) return 'page';
+  if (href === '/') return undefined;
   return here.startsWith(url(href)) ? 'true' : undefined;
 };
 ---
 
 <header class="site-header">
   <div class="container bar">
-    <a href={url('/')} class="home" aria-label="IPJunction home"><Logo /></a>
+    <a href={url('/')} class="home" aria-label="IPJunction home"><Logo width={124} /></a>
 
     <nav aria-label="Main">
       <ul class="desktop">
@@ -37,21 +38,34 @@ const current = (href: string): 'page' | 'true' | undefined => {
               </li>
             ))
           }
-          <li><a href={url('/contact/')}>Contact</a></li>
         </ul>
       </details>
     </nav>
-
-    <a class="btn cta" href={url(PRIMARY_CTA.href)}>{PRIMARY_CTA.label}</a>
   </div>
 </header>
+
+<script>
+  const menu = document.querySelector<HTMLDetailsElement>('.site-header .mobile');
+  if (menu) {
+    const close = () => {
+      menu.open = false;
+    };
+    menu.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && menu.open) {
+        close();
+        menu.querySelector<HTMLElement>('summary')?.focus();
+      }
+    });
+    menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', close));
+  }
+</script>
 
 <style>
   .site-header {
     position: sticky;
     top: 0;
     z-index: 50;
-    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    background: color-mix(in srgb, var(--bg) 92%, transparent);
     backdrop-filter: saturate(140%) blur(10px);
     -webkit-backdrop-filter: saturate(140%) blur(10px);
     border-bottom: 1px solid var(--border);
@@ -59,31 +73,29 @@ const current = (href: string): 'page' | 'true' | undefined => {
   .bar {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: var(--s3);
-    height: 68px;
+    min-height: 68px;
   }
   .home {
     display: inline-flex;
     padding-block: 4px;
   }
-  nav {
-    margin-left: auto;
-  }
   .desktop {
     display: none;
     list-style: none;
-    gap: 0.25rem;
+    gap: 0.15rem;
   }
   .desktop a,
   .mobile a {
     display: inline-flex;
     align-items: center;
     min-height: 40px;
-    padding-inline: 0.625rem;
+    padding: 0.3rem 0.5rem;
     color: var(--muted);
     font-size: 0.9375rem;
     text-decoration: none;
-    border-radius: var(--radius);
+    border-bottom: 2px solid transparent;
     transition: color 160ms ease;
   }
   .desktop a:hover,
@@ -91,11 +103,7 @@ const current = (href: string): 'page' | 'true' | undefined => {
     color: var(--text);
   }
   .desktop a[aria-current] {
-    text-decoration: underline;
-    text-underline-offset: 0.45em;
-  }
-  .cta {
-    display: none;
+    border-bottom-color: var(--accent-text);
   }
   .mobile summary {
     display: inline-flex;
@@ -103,24 +111,25 @@ const current = (href: string): 'page' | 'true' | undefined => {
     min-height: 44px;
     padding-inline: 0.875rem;
     border: 1px solid var(--border-strong);
-    border-radius: var(--radius);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
     cursor: pointer;
     list-style: none;
-    font-weight: 520;
+    font-weight: 600;
   }
   .mobile summary::-webkit-details-marker {
     display: none;
   }
   .mobile[open] summary {
-    border-color: var(--text);
+    border-color: var(--accent-text);
   }
   .mobile ul {
     position: absolute;
     left: 0;
     right: 0;
-    top: 68px;
+    top: 100%;
     display: grid;
-    gap: 0.25rem;
+    gap: 0.15rem;
     padding: var(--s2) var(--gutter) var(--s3);
     list-style: none;
     background: var(--bg);
@@ -132,15 +141,16 @@ const current = (href: string): 'page' | 'true' | undefined => {
     font-size: var(--step-1);
     color: var(--text);
   }
-  @media (min-width: 1080px) {
+  .mobile a[aria-current] {
+    color: var(--accent-text);
+    font-weight: 600;
+  }
+  @media (min-width: 1040px) {
     .desktop {
       display: flex;
     }
     .mobile {
       display: none;
-    }
-    .cta {
-      display: inline-flex;
     }
   }
 </style>
